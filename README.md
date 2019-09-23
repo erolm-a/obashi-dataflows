@@ -6,7 +6,7 @@
 
 - Liam Brodie [2198998b](2198998b@student.gla.ac.uk)
 
-- Iacovos Kelepeniotis [2325969k](2325969k@student.gla.ac.uk]
+- Iacovos Kelepeniotis [2325969k](2325969k@student.gla.ac.uk)
 
 - André Ferreira [2265787r](2265787r@student.gla.ac.uk)
 
