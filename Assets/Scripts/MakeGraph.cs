@@ -22,7 +22,7 @@ class Vertex {
     public int id {get;}
     public Pose pose;
 
-    public GameObject mesh {get; set;}
+    public GameObject pawn {get; set;}
 
     public VertexType type {get;}
     private static Dictionary<int, Vertex> m_vertices = new Dictionary<int, Vertex>();
@@ -49,6 +49,7 @@ class Vertex {
         return new_vertex;
     }
 }
+
 public class MakeGraph : MonoBehaviour
 {
     
@@ -59,6 +60,10 @@ public class MakeGraph : MonoBehaviour
 
     public MainARController controller;
 
+    public GameObject cordFlare;
+
+    private GameObject m_instantiated;
+
     private bool m_downloaded_adj_list;
     private Dictionary<int, List<int>> m_adjancency_list;
 
@@ -68,17 +73,30 @@ public class MakeGraph : MonoBehaviour
     private void m_populate() {
 
         // Basic experiment for pulling all the objects
-        Vertex v1 = Vertex.createVertex(new Pose(new Vector3(0, 0, 2), new Quaternion(0,0,0,0)), VertexType.POI);
-        Vertex v2 = Vertex.createVertex(new Pose(new Vector3(1, 0, 2), new Quaternion(0,0,0,0)), VertexType.POI);
-        Vertex v0 = Vertex.createVertex(new Pose(new Vector3(0, 0, 1), new Quaternion(0,0,0,0)), VertexType.CORNER);
+        // TODO: clean this up after demo!
+        Vertex v0 = Vertex.createVertex(new Pose(new Vector3(0, -1.25f, 1), new Quaternion(0,0,0,0)), VertexType.CORNER);
+        Vertex v1 = Vertex.createVertex(new Pose(new Vector3(0, -1.25f, 2), new Quaternion(0,0,0,0)), VertexType.POI);
+        Vertex v2 = Vertex.createVertex(new Pose(new Vector3(1, -1.25f, 2), new Quaternion(0,0,0,0)), VertexType.POI);
         m_path = new List<int> {v0.id, v1.id, v2.id};
 
         foreach(int id in m_path)
         {
             Vertex v = Vertex.getVertex(id);
-            v.mesh = Instantiate(POIAnchor, v.pose.position, v.pose.rotation);
+            v.pawn = Instantiate(POIAnchor, v.pose.position, v.pose.rotation);
+            v.pawn.transform.SetParent(transform);
         }
+
+        m_instantiated = Instantiate(cordFlare, Vector3.Lerp(v0.pose.position, v1.pose.position, 0.5f), new Quaternion(0,0,0,0));
+
+        m_instantiated.transform.SetParent(transform);
+        m_instantiated.transform.LookAt(v1.pawn.transform);
+        m_instantiated.transform.Rotate(90f, 0f, 0f);
+        float distance = Vector3.Distance(v0.pawn.transform.position, v1.pawn.transform.position);
+        m_instantiated.transform.localScale = new Vector3(0.05f, distance/2, 0.05f);
+
+        
     }
+
 
     private void m_updateVertex() {
         Pose cur_pos = Frame.Pose;
@@ -96,7 +114,7 @@ public class MakeGraph : MonoBehaviour
         if (Vector2.Distance(cur_projected, next_projected) < 0.2) {
             _Log("Reached destination " + next_vertex.id);
 
-            Destroy(next_vertex.mesh);
+            Destroy(next_vertex.pawn);
             m_path.RemoveAt(0);
         }
     }
