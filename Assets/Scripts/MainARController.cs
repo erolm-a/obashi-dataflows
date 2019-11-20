@@ -1,17 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using GoogleARCore;
+﻿using GoogleARCore;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class MainARController : MonoBehaviour
 {
     private bool m_IsQuitting;
-    private Vector3 m_PrevPosition;
-
-    //public Camera firstPersonCamera;
-    public Camera mappingCamera;
-    public GameObject player;
 
     int frameCounter;
 
@@ -19,8 +12,6 @@ public class MainARController : MonoBehaviour
     void Start()
     {
         m_IsQuitting = false;
-        m_PrevPosition = Vector3.zero;
-        frameCounter = 0;
         Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
     }
 
@@ -28,27 +19,8 @@ public class MainARController : MonoBehaviour
     void Update()
     {
         _UpdateApplicationLifecycle();
-
-        Vector3 curPosition = Frame.Pose.position;
-        if (Session.Status != SessionStatus.Tracking)
-        {
-            m_PrevPosition = curPosition;
-        }
-        else
-        {
-            var deltaPosition = curPosition - m_PrevPosition;
-            player.transform.Translate(deltaPosition.x, 0, deltaPosition.z);
-            
-            m_PrevPosition = curPosition;
-            frameCounter++;
-
-            if (frameCounter % 10 == 0)
-            {
-                Debug.Log($"{curPosition.x} {curPosition.y} {curPosition.z}");
-                Debug.Log($"Player position: {player.transform.position}");
-            }
-        }
         
+        // TODO: add more logic
     }
 
     /// <summary>
@@ -59,7 +31,15 @@ public class MainARController : MonoBehaviour
         // Exit the app when the 'back' button is pressed.
         if (Input.GetKey(KeyCode.Escape))
         {
-            Application.Quit();
+            if (this.gameObject.scene.name == "Menu")
+            {
+                Application.Quit();
+            }
+            else
+            {
+                SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+            }
+            
         }
 
         // Only allow the screen to sleep when not tracking.
@@ -81,13 +61,13 @@ public class MainARController : MonoBehaviour
         // appear.
         if (Session.Status == SessionStatus.ErrorPermissionNotGranted)
         {
-            _ShowAndroidToastMessage("Camera permission is needed to run this application.");
+            ShowAndroidToastMessage("Camera permission is needed to run this application.");
             m_IsQuitting = true;
             Invoke("_DoQuit", 0.5f);
         }
         else if (Session.Status.IsError())
         {
-            _ShowAndroidToastMessage(
+            ShowAndroidToastMessage(
                 "ARCore encountered a problem connecting.  Please start the app again.");
             m_IsQuitting = true;
             Invoke("_DoQuit", 0.5f);
@@ -106,7 +86,7 @@ public class MainARController : MonoBehaviour
     /// Show an Android toast message.
     /// </summary>
     /// <param name="message">Message string to show in the toast.</param>
-    private void _ShowAndroidToastMessage(string message)
+    public void ShowAndroidToastMessage(string message)
     {
         AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         AndroidJavaObject unityActivity =
