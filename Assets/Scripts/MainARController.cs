@@ -1,6 +1,7 @@
 ﻿using GoogleARCore;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class MainARController : MonoBehaviour
 {
@@ -8,14 +9,12 @@ public class MainARController : MonoBehaviour
 
     int frameCounter;
 
-    // Start is called before the first frame update
     void Start()
     {
         m_IsQuitting = false;
         Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
     }
 
-    // Update is called once per frame
     void Update()
     {
         _UpdateApplicationLifecycle();
@@ -86,7 +85,8 @@ public class MainARController : MonoBehaviour
     /// Show an Android toast message.
     /// </summary>
     /// <param name="message">Message string to show in the toast.</param>
-    public void ShowAndroidToastMessage(string message)
+    [ObsoleteAttribute("Using Android toasts breaks the UI and is not portable. A Unity UI-based approach to be done soon")]
+    public static void ShowAndroidToastMessage(string message)
     {
         AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         AndroidJavaObject unityActivity =
@@ -103,6 +103,15 @@ public class MainARController : MonoBehaviour
                 toastObject.Call("show");
             }));
         }
+    }
+
+    /// <summary>
+    /// Log (temporary method) that is going to be removed soom
+    /// </summary>
+    /// <param name="message">The message to print</param>
+    public static void Log(string message)
+    {
+        ShowAndroidToastMessage(message);   
     }
 
 }
