@@ -46,4 +46,3 @@ build-android:
   image: gableroux/unity3d:2018.4.12f1-android
   variables:
     BUILD_TARGET: Android
-
