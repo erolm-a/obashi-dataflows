@@ -56,8 +56,8 @@ test:
   <<: *cache
   script:
     - "echo $UNITY_TARGET" |
-      "echo Username: $UNITY_USERNAME" |
-      "echo Password: $UNITY_PASSWORD" |
+      "echo Username: $UNITY_USERNAME"
+      "echo Password: $UNITY_PASSWORD"
       chmod +x ./ci/build.sh && ./ci/build.sh
   artifacts:
     paths:
