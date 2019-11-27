@@ -40,9 +40,6 @@ get-android-license:
   <<: *unity_before_script
   <<: *cache
   script:
-    - echo "$UNITY_TARGET"
-    - echo "Username: $UNITY_USERNAME"
-    - echo "Password: $UNITY_PASSWORD"
     - chmod +x ./ci/test.sh && ./ci/test.sh
   artifacts:
     paths:
@@ -58,7 +55,10 @@ test:
   <<: *unity_before_script
   <<: *cache
   script:
-    - chmod +x ./ci/build.sh && ./ci/build.sh
+    - "echo $UNITY_TARGET" |
+      "echo Username: $UNITY_USERNAME" |
+      "echo Password: $UNITY_PASSWORD" |
+      chmod +x ./ci/build.sh && ./ci/build.sh
   artifacts:
     paths:
       - ./Builds/
