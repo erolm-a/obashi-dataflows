@@ -13,8 +13,10 @@
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
 
-# But please, do ignore Google ARCore & friends
-#/Assets/Google*
+#Ignore Google ARCore Examples
+/Assets/GoogleARCore/Examples/
+/Assets/GoogleARCore/Examples.meta
+
 #/Assets/PlayServicesResolver*
 
 
