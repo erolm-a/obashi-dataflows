@@ -30,6 +30,7 @@ public class ManipulationSystem : MonoBehaviour
     private PanGestureRecognizer panGesture;
 
     private GameObject selected = null;
+    private Material oldUnselectedMaterial = null;
 
     /// <summary>
     /// Remove visual hint under a pawn, making it unselected.
@@ -44,7 +45,7 @@ public class ManipulationSystem : MonoBehaviour
         
         Renderer[] renderer = selected.GetComponentsInChildren<Renderer>();
         
-        renderer[0].materials[1] = null;
+        renderer[0].material = oldUnselectedMaterial;
         selected = null;
     }
 
@@ -56,8 +57,9 @@ public class ManipulationSystem : MonoBehaviour
     {
         selected = toSelect;
         Renderer[] renderer = selected.GetComponentsInChildren<Renderer>();
-        Debug.Log(renderer[0].material);
-        renderer[0].materials[1] = SelectedMaterial;
+        oldUnselectedMaterial = renderer[0].material;
+        renderer[0].material = SelectedMaterial;
+
     }
 
     /// <summary>
