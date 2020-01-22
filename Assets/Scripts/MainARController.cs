@@ -105,7 +105,7 @@ public class MainARController : MonoBehaviour
         }
     }
 
-    /// <summary>
+    /// <summary>project~
     /// Log (temporary method) that is going to be removed soom
     /// </summary>
     /// <param name="message">The message to print</param>

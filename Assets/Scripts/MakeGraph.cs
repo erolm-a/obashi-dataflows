@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Vertex;
 
 public class MakeGraph : MonoBehaviour
 {

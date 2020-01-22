@@ -44,7 +44,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  DoorAnchor: {fileID: 1513252861858756, guid: 8b604092cbb3d482da82845b61a6809b, type: 3}
-  CornerAnchor: {fileID: 1513252861858756, guid: 8b604092cbb3d482da82845b61a6809b,
+  DoorAnchor: {fileID: 2624431551924907035, guid: 2cdf346a545397c048e5185da49171d9,
     type: 3}
-  POIAnchor: {fileID: 1513252861858756, guid: 8b604092cbb3d482da82845b61a6809b, type: 3}
+  CornerAnchor: {fileID: 2624431551924907035, guid: 2cdf346a545397c048e5185da49171d9,
+    type: 3}
+  POIAnchor: {fileID: 2624431551924907035, guid: 2cdf346a545397c048e5185da49171d9,
+    type: 3}
