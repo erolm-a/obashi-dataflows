@@ -1,0 +1,4 @@
+The files in this directory are distributed freely, according to the website,
+provided they do not get altered.
+
+Source: https://www.cisco.com/c/en/us/about/brand-center/network-topology-icons.html

@@ -1,6 +1,13 @@
 ﻿using DigitalRubyShared;
 using UnityEngine;
+using UnityEngine.UI;
 using GoogleARCore;
+
+enum EditMode
+{
+    ADD,
+    DELETE
+}
 
 public class ManipulationSystem : MonoBehaviour
 {
@@ -26,11 +33,27 @@ public class ManipulationSystem : MonoBehaviour
     /// </summary>
     public Material SelectedMaterial;
 
+    /// <summary>
+    /// Flip add/delete button
+    /// </summary>
+    public Button AddDeleteButton;
+
+    /// <summary>
+    /// Control the dropdown to select a device to add (when in Add mode)
+    /// </summary>
+    public Dropdown DeviceDropdown;
+
+
     private TapGestureRecognizer tapGesture;
     private PanGestureRecognizer panGesture;
 
     private GameObject selected = null;
     private Material oldUnselectedMaterial = null;
+
+    private bool isPaused = false;
+
+    private EditMode mode;
+
 
     /// <summary>
     /// Remove visual hint under a pawn, making it unselected.
@@ -42,9 +65,9 @@ public class ManipulationSystem : MonoBehaviour
             return;
         //foreach (Transform child in selected.transform)
         //    Destroy(transform.gameObject);
-        
+
         Renderer[] renderer = selected.GetComponentsInChildren<Renderer>();
-        
+
         renderer[0].material = oldUnselectedMaterial;
         selected = null;
     }
@@ -70,7 +93,7 @@ public class ManipulationSystem : MonoBehaviour
     {
         if (gesture.State == GestureRecognizerState.Ended)
         {
-            
+
             if (selected == null)
             {
                 Debug.Log("No selected objects, trying to create a device");
@@ -80,7 +103,7 @@ public class ManipulationSystem : MonoBehaviour
                 TrackableHit hit;
                 TrackableHitFlags raycastFlags = TrackableHitFlags.PlaneWithinPolygon | TrackableHitFlags.FeaturePointWithSurfaceNormal;
 
-                if(Frame.Raycast(gesture.FocusX, gesture.FocusY, raycastFlags, out hit))
+                if (Frame.Raycast(gesture.FocusX, gesture.FocusY, raycastFlags, out hit))
                 {
                     Debug.Log("Raycasting found a plane at " + hit.Pose.position);
                     // check if we are hitting a plane (again) and the
@@ -118,7 +141,7 @@ public class ManipulationSystem : MonoBehaviour
                 if (Physics.Raycast(ray, out hit))
                 {
                     Transform objectHit = hit.transform;
-                    
+
                     // change target
                     if (objectHit.gameObject.tag == "Selectable")
                     {
@@ -128,6 +151,34 @@ public class ManipulationSystem : MonoBehaviour
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Flip between add and delete button
+    /// </summary>
+    public void OnAddDeleteButtonPress()
+    {
+
+        this.mode = this.mode == EditMode.ADD ? EditMode.DELETE : EditMode.ADD;
+
+        DeviceDropdown.gameObject.SetActive(this.mode == EditMode.ADD);
+        DeviceDropdown.interactable = this.mode == EditMode.ADD;
+
+        if (this.mode == EditMode.ADD)
+            SetAddDeleteButtonLabel("Add devices");
+        else
+            SetAddDeleteButtonLabel("Remove devices");
+    }
+
+    /// <summary>
+    /// Listen for a dropdown change.
+    /// </summary>
+    public void OnDropdownChange()
+    {
+        var options = DeviceDropdown.options;
+        var option = options[DeviceDropdown.value];
+
+        MainARController.Log($"Selected option {option.text}");
     }
 
     /// <summary>
@@ -142,9 +193,25 @@ public class ManipulationSystem : MonoBehaviour
     }
 
 
+    private void SetAddDeleteButtonLabel(string label)
+    {
+        Text textLabel = AddDeleteButton.GetComponentInChildren<Text>();
+        textLabel.text = label;
+    }
     void Start()
     {
         CreateTapGesture();
+        SetAddDeleteButtonLabel("Add devices");
         MainARController.Log("Started Edit mode!!");
+    }
+
+    void OnApplicationFocus(bool hasFocus)
+    {
+        isPaused = !hasFocus;
+    }
+
+    void OnApplicationPause(bool pauseStatus)
+    {
+        isPaused = pauseStatus;
     }
 }
