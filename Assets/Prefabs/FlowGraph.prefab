@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3618558107820252700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9156543816050758606}
+  - component: {fileID: 6422747388218951486}
+  m_Layer: 0
+  m_Name: FlowGraph
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9156543816050758606
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3618558107820252700}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6422747388218951486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3618558107820252700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0b4e6f7151a726f68d858023f3020d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  globalAnchor: {fileID: 0}
+  PCPawn: {fileID: 4651182997342596473, guid: 4460645e4779e8e9ba1b34c0efe982d2, type: 3}
+  RouterPawn: {fileID: 4651182997342596473, guid: 4460645e4779e8e9ba1b34c0efe982d2,
+    type: 3}
+  SwitchPawn: {fileID: 4651182997342596473, guid: 4460645e4779e8e9ba1b34c0efe982d2,
+    type: 3}
+  ServerPawn: {fileID: 4651182997342596473, guid: 4460645e4779e8e9ba1b34c0efe982d2,
+    type: 3}
+  Link: {fileID: 5926822347843795321, guid: 7c1385785a5d425fdaa7d8064a6b03db, type: 3}
