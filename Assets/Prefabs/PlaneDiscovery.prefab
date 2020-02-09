@@ -325,7 +325,7 @@ GameObject:
   - component: {fileID: 222653202546379244}
   - component: {fileID: 114376072597821902}
   - component: {fileID: 328931233274937060}
-  - component: {fileID: 114198791628043326}
+  - component: {fileID: 2878636373876325359}
   m_Layer: 5
   m_Name: Hand Animation
   m_TagString: Untagged
@@ -417,7 +417,7 @@ VideoPlayer:
   m_Looping: 1
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
---- !u!114 &114198791628043326
+--- !u!114 &2878636373876325359
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -426,7 +426,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1134799989617770}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c46dafe9f93ea4a638b8f23c38039c63, type: 3}
+  m_Script: {fileID: 11500000, guid: a315f0fefb29abd23b54eafda6d347ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   RawImage: {fileID: 114376072597821902}
@@ -1231,8 +1231,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4522253342955840}
   - component: {fileID: 33799012446163236}
+  - component: {fileID: 5443376007794853992}
   - component: {fileID: 23202741898937940}
-  - component: {fileID: 114677467912739828}
+  - component: {fileID: 3667266672375290586}
   m_Layer: 0
   m_Name: Discovery Point Cloud
   m_TagString: Untagged
@@ -1262,6 +1263,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1947850325268790}
   m_Mesh: {fileID: 0}
+--- !u!114 &5443376007794853992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947850325268790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c669a4cc43174caea1a3748b76f2652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DetectedPlanePrefab: {fileID: 0}
 --- !u!23 &23202741898937940
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1299,7 +1313,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &114677467912739828
+--- !u!114 &3667266672375290586
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1308,7 +1322,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1947850325268790}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d5645b79cc5e4251827ffe171ed4658, type: 3}
+  m_Script: {fileID: 11500000, guid: 10d99c1bb95c1ab88a25b6a87880fb7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointColor: {r: 1, g: 1, b: 1, a: 0}
