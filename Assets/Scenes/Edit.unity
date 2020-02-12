@@ -1348,6 +1348,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114675208815321770, guid: fbeaf554cf20e26d48293b196166ec3c,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 9fdbd3087018f453b808bcb2c2e926f6,
+        type: 3}
+    - target: {fileID: 114716270761809112, guid: fbeaf554cf20e26d48293b196166ec3c,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 9fdbd3087018f453b808bcb2c2e926f6,
+        type: 3}
+    - target: {fileID: 114499232208719540, guid: fbeaf554cf20e26d48293b196166ec3c,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5ba8a8bc2471acaab91359e9272912b0,
+        type: 3}
+    - target: {fileID: 114255811150471528, guid: fbeaf554cf20e26d48293b196166ec3c,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 9fdbd3087018f453b808bcb2c2e926f6,
+        type: 3}
+    - target: {fileID: 114632337368380536, guid: fbeaf554cf20e26d48293b196166ec3c,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 9fdbd3087018f453b808bcb2c2e926f6,
+        type: 3}
+    - target: {fileID: 114407642807697180, guid: fbeaf554cf20e26d48293b196166ec3c,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 883455b489cd5a59cae6a5f9916ba9e7,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fbeaf554cf20e26d48293b196166ec3c, type: 3}
 --- !u!1 &1308960464
