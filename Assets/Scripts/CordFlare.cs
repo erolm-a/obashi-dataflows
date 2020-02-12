@@ -3,27 +3,16 @@ using GoogleARCore;
 
 public class CordFlare : MonoBehaviour
 {
-    
+
     /// <summary>
     /// Scrolling of the texture
     /// </summary>
     public float ScrollY = -0.8f;
 
     /// <summary>
-    /// </summary>
-    public enum OSIProtocolStackType {
-        DATA_FRAME,
-        NETWORK,
-        TRANSPORT,
-        APPLICATION
-    }
-
-    /// <summary>
     /// Each cord could use a different cord material according to the transport protocol.
     /// For example, we might expect that a cord between switches could be different from a cord between a router and a l
     /// </summary>
-    public OSIProtocolStackType protocolType;
-
     private (Vector2, Vector2) m_endpoints;
     private (bool, bool) m_visitedEndpoints = (false, false);
 
@@ -34,19 +23,17 @@ public class CordFlare : MonoBehaviour
     /// <param name="p1">The first point</param>
     /// <param name="p2">The second point</param>
     /// <returns>The newly instantiated cord</returns>
-    public GameObject create(GameObject p1, GameObject p2, OSIProtocolStackType type) {
-        GameObject result = Instantiate(this.gameObject, Vector3.Lerp(p1.transform.position, p2.transform.position, 0.5f), new Quaternion(0,0,0,0));
-
+    public GameObject create(GameObject p1, GameObject p2)
+    {
+        GameObject result = Instantiate(this.gameObject, Vector3.Lerp(p1.transform.position, p2.transform.position, 0.5f), Quaternion.identity);
         CordFlare script = result.GetComponent<CordFlare>();
         script.m_endpoints.Item1 = new Vector2(p1.transform.position.x, p1.transform.position.z);
         script.m_endpoints.Item2 = new Vector2(p2.transform.position.x, p2.transform.position.z);
-        
-            
+
         result.transform.LookAt(p2.transform);
         result.transform.Rotate(90f, 0, 0);
         float distance = Vector3.Distance(p1.transform.position, p2.transform.position);
         result.transform.localScale = new Vector3(0.05f, distance / 2, 0.05f);
-
 
         return result;
     }
@@ -57,7 +44,7 @@ public class CordFlare : MonoBehaviour
     /// </summary>
     private void m_scroll()
     {
-        Vector2 scroll = new Vector2( 0, Time.time * ScrollY);
+        Vector2 scroll = new Vector2(0, Time.time * ScrollY);
         GetComponent<Renderer>().material.mainTextureOffset = scroll;
     }
 
@@ -74,7 +61,7 @@ public class CordFlare : MonoBehaviour
 
         if (Vector2.Distance(projected_position, m_endpoints.Item2) < 0.2f)
             m_visitedEndpoints.Item2 = true;
-        
+
         if (m_visitedEndpoints.Item1 && m_visitedEndpoints.Item2)
             Destroy(gameObject);
 
