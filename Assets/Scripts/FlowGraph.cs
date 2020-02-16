@@ -12,6 +12,7 @@ namespace DataFlows
         /// <summary>
         /// The anchor that roots the whole graph on
         /// </summary>
+        [HideInInspector]
         public Anchor globalAnchor;
 
         public GameObject PCPawn;
