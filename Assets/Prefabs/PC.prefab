@@ -24,14 +24,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4651182997342596473}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9015234030992060463}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -49,6 +49,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b67fd7c818df1f439b341fe422250732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  osiType: 3
+  deviceName: 
+  deviceId: 0
 --- !u!1001 &9015234030992190127
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59,6 +62,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 47aa4ef5d9f5e2298a32a979ce3a9cba, type: 3}
       propertyPath: m_Name
       value: Computer
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 47aa4ef5d9f5e2298a32a979ce3a9cba, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 47aa4ef5d9f5e2298a32a979ce3a9cba, type: 3}
       propertyPath: m_LocalPosition.x
@@ -78,7 +85,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 47aa4ef5d9f5e2298a32a979ce3a9cba, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 47aa4ef5d9f5e2298a32a979ce3a9cba, type: 3}
       propertyPath: m_LocalRotation.z
@@ -86,7 +93,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 47aa4ef5d9f5e2298a32a979ce3a9cba, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 47aa4ef5d9f5e2298a32a979ce3a9cba, type: 3}
       propertyPath: m_RootOrder
@@ -98,7 +105,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 47aa4ef5d9f5e2298a32a979ce3a9cba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 47aa4ef5d9f5e2298a32a979ce3a9cba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z

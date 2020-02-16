@@ -29,10 +29,6 @@ namespace DataFlows
         public Dictionary<int, GameObject> id2GameObject { get; private set; }
 
         /// <summary>
-        /// Reverse of `id2GameObject`
-        /// </summary>
-        public Dictionary<GameObject, int> GameObject2Id { get; private set; }
-        /// <summary>
         /// A normal adjacency list.
         /// </summary>
         private Dictionary<int, List<int>> adjacencyList;
@@ -74,14 +70,15 @@ namespace DataFlows
                     break;
             }
 
-            Debug.Log($"newObject is {newObject}");
+            Device device = newObject.GetComponent<Device>();
+            device.deviceId = id;
+
             adjacencyList[id] = new List<int>();
-
             id2GameObject[id] = newObject;
-            GameObject2Id[newObject] = id;
 
-            newObject.transform.parent = globalAnchor.transform.parent;
+            newObject.transform.SetParent(globalAnchor.transform.parent);
 
+            Debug.Log($"Created device (id: {id}) ");
             return newObject;
         }
 
@@ -97,7 +94,6 @@ namespace DataFlows
             int min_id = Math.Min(id1, id2);
             int max_id = Math.Max(id1, id2);
 
-            // If the
             GameObject newLink;
             if (!edgeList.TryGetValue((min_id, max_id), out newLink))
             {
@@ -108,8 +104,87 @@ namespace DataFlows
 
                 adjacencyList[min_id].Add(max_id);
                 adjacencyList[max_id].Add(min_id);
+                edgeList.Add((min_id, max_id), newLink);
             }
             return newLink;
+        }
+
+        /// <summary>
+        /// Disconnect a device from the graph, without actually destroying it.
+        /// However, it destroys links (if they exist).
+        /// <param name="id">The id of the device within the scene</param>
+        /// </summary>
+        void DeleteDevice(int id)
+        {
+            var adjacentVertices = adjacencyList[id];
+            foreach (int adjacentId in adjacentVertices)
+            {
+                adjacencyList[adjacentId].Remove(id);
+                var key = (Math.Min(id, adjacentId), Math.Max(id, adjacentId));
+                GameObject link = edgeList[key];
+                edgeList.Remove(key);
+                Destroy(link);
+            }
+
+            adjacencyList[id].Clear();
+        }
+
+        /// <summary>
+        /// If the pawn is a device, call `DeleteDevice()` with its id and `Destroy()` it.
+        /// If the pawn is a link, disconnect its endpoints and `Destroy()` the link.
+        /// Otherwise, just ignore.
+        /// <param name="pawn"></param>
+        /// </summary>
+        public void DeleteObject(GameObject pawn)
+        {
+            int? id = GetDeviceId(pawn);
+
+            // It is a device
+            if (id.HasValue)
+            {
+                DeleteDevice(id.Value);
+                Destroy(pawn);
+            }
+            else
+            {
+                var flare = pawn.GetComponent<CordFlare>();
+                if (!flare)
+                {
+                    return;
+                }
+
+                int? id1 = GetDeviceId(flare.endpoints.Item1);
+                int? id2 = GetDeviceId(flare.endpoints.Item2);
+
+                if (id1.HasValue && id2.HasValue)
+                {
+                    var key = (Math.Min(id1.Value, id1.Value), Math.Max(id1.Value, id2.Value));
+
+                    adjacencyList[key.Item1].Remove(key.Item2);
+                    adjacencyList[key.Item2].Remove(key.Item1);
+                    edgeList.Remove(key);
+                    Destroy(pawn);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the id of a device.
+        /// <param name="pawn">The device to extract the device info from</param>
+        /// <returns>The id of the device, if the object has a Device script (or one of its derivatives) in it, or a null</returns>
+        /// </summary>
+        public static int? GetDeviceId(GameObject pawn)
+        {
+            if (pawn == null)
+            {
+                return null;
+            }
+            Device device = pawn.GetComponent<Device>();
+            if (device == null)
+            {
+                return null;
+            }
+            return device.deviceId;
         }
 
         void Start()
@@ -117,7 +192,6 @@ namespace DataFlows
             edgeList = new Dictionary<(int, int), GameObject>();
             adjacencyList = new Dictionary<int, List<int>>();
             id2GameObject = new Dictionary<int, GameObject>();
-            GameObject2Id = new Dictionary<GameObject, int>();
         }
     }
 }
