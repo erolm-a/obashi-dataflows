@@ -1,15 +1,16 @@
-﻿namespace DataFlows
+﻿using UnityEngine;
+
+namespace DataFlows
 {
     /// <summary>
     /// Manage a PC entity.
     /// A PC
     /// </summary>
-    public class PC : Device
+    public class Router : Device
     {
-
         public override void OnUserSelect()
         {
-            MainARController.Log($"Picked the PC {this.deviceName} (id ${this.deviceId} )!");
+            MainARController.Log("Picked a Server!");
         }
     }
 }

@@ -13,8 +13,7 @@ public class CordFlare : MonoBehaviour
     /// Each cord could use a different cord material according to the transport protocol.
     /// For example, we might expect that a cord between switches could be different from a cord between a router and a l
     /// </summary>
-    private (Vector2, Vector2) m_endpoints;
-    private (bool, bool) m_visitedEndpoints = (false, false);
+    public (GameObject, GameObject) endpoints;
 
     /// <summary>
     /// Create a cord between two points and perform proper scaling.
@@ -27,8 +26,8 @@ public class CordFlare : MonoBehaviour
     {
         GameObject result = Instantiate(this.gameObject, Vector3.Lerp(p1.transform.position, p2.transform.position, 0.5f), Quaternion.identity);
         CordFlare script = result.GetComponent<CordFlare>();
-        script.m_endpoints.Item1 = new Vector2(p1.transform.position.x, p1.transform.position.z);
-        script.m_endpoints.Item2 = new Vector2(p2.transform.position.x, p2.transform.position.z);
+        script.endpoints.Item1 = p1;
+        script.endpoints.Item2 = p2;
 
         result.transform.LookAt(p2.transform);
         result.transform.Rotate(90f, 0, 0);
@@ -48,28 +47,8 @@ public class CordFlare : MonoBehaviour
         GetComponent<Renderer>().material.mainTextureOffset = scroll;
     }
 
-    /// <summary>
-    /// Check if both the endpoints have been visited. If yes, delete the object.
-    /// </summary>
-    private void m_updateEndpoints()
-    {
-        Vector3 cur_position = Frame.Pose.position;
-        Vector2 projected_position = new Vector3(cur_position.x, cur_position.z);
-
-        if (Vector2.Distance(projected_position, m_endpoints.Item1) < 0.2f)
-            m_visitedEndpoints.Item1 = true;
-
-        if (Vector2.Distance(projected_position, m_endpoints.Item2) < 0.2f)
-            m_visitedEndpoints.Item2 = true;
-
-        if (m_visitedEndpoints.Item1 && m_visitedEndpoints.Item2)
-            Destroy(gameObject);
-
-    }
-
     void Update()
     {
         m_scroll();
-        m_updateEndpoints();
     }
 }

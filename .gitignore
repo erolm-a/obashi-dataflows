@@ -65,3 +65,10 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+# Ignore license keys
+*.ulf
+unity3d.alf
+
+# Ignore default keystore
+*.keystore

@@ -17,19 +17,17 @@ namespace DataFlows
         ROUTER,
         SWITCH,
         SERVER,
-        PRINTER
+        PRINTER,
+        LINK
     }
 
     public abstract class Device : MonoBehaviour
     {
-        public OSIStack osiType { get; private set; }
-        public string deviceName { get; private set; }
-
-        public void Populate(OSIStack osiType, string deviceName)
-        {
-            this.osiType = osiType;
-            this.deviceName = deviceName;
-        }
+        public OSIStack osiType;
+        [HideInInspector]
+        public string deviceName;
+        [HideInInspector]
+        public int deviceId;
 
         /// <summary>
         /// Action to perform when the object is selected

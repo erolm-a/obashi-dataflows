@@ -45,10 +45,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   globalAnchor: {fileID: 0}
   PCPawn: {fileID: 4651182997342596473, guid: 4460645e4779e8e9ba1b34c0efe982d2, type: 3}
-  RouterPawn: {fileID: 4651182997342596473, guid: 4460645e4779e8e9ba1b34c0efe982d2,
+  RouterPawn: {fileID: 4264357304680587217, guid: d07f2b5820a8f29a994bfe034d062acc,
     type: 3}
   SwitchPawn: {fileID: 4651182997342596473, guid: 4460645e4779e8e9ba1b34c0efe982d2,
     type: 3}
-  ServerPawn: {fileID: 4651182997342596473, guid: 4460645e4779e8e9ba1b34c0efe982d2,
+  ServerPawn: {fileID: 4755339527366272370, guid: 9c5227dc06e12e2df93e97a61618989b,
     type: 3}
   Link: {fileID: 5926822347843795321, guid: 7c1385785a5d425fdaa7d8064a6b03db, type: 3}

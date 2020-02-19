@@ -17,14 +17,11 @@ namespace DataFlows
         /// Google ARCore Camera for raycasting
         /// </summary>
         public Camera FirstPersonCamera;
+
         /// <summary>
         /// Cord prefab that connects the vertices
         /// </summary>
         public GameObject Cord;
-        /// <summary>
-        /// Material for a selected pawn
-        /// </summary>
-        public Material SelectedMaterial;
 
         /// <summary>
         /// Flip add/delete button
@@ -40,121 +37,167 @@ namespace DataFlows
         private TapGestureRecognizer tapGesture;
         private PanGestureRecognizer panGesture;
 
-
         private SelectionState selected;
-        private Material oldUnselectedMaterial = null;
 
         private bool isPaused = false;
 
         private EditMode mode;
 
-        private DataFlows.DeviceType deviceType;
+        private DataFlows.DeviceType deviceType = DeviceType.PC;
 
         /// <summary>
         /// Access the FlowGraph prefab
         /// </summary>
         private FlowGraph flowGraph;
 
-
-        /// <summary>
-        /// Remove visual hint under a pawn, making it unselected.
-        /// As a side effect, selected is set to null and its second material is set to null.
-        /// </summary>
-        private void DeselectPawn()
-        {
-            if (selected.focusedObject == null)
-                return;
-            //foreach (Transform child in selected.transform)
-            //    Destroy(transform.gameObject);
-
-            Renderer[] renderer = selected.focusedObject.GetComponentsInChildren<Renderer>();
-
-            renderer[0].material = oldUnselectedMaterial;
-            selected.focusedObject = null;
-            selected.focusedId = -1;
-        }
-
-        /// <summary>
-        /// Select the object and add a material to make the selection evident
-        /// </summary>
-        /// <param name="toSelect">The object to select</param>
-        private void SelectPawn(GameObject toSelect)
-        {
-            selected.focusedObject = toSelect;
-            selected.focusedId = flowGraph.GameObject2Id[toSelect];
-            Renderer[] renderer = selected.focusedObject.GetComponentsInChildren<Renderer>();
-            oldUnselectedMaterial = renderer[0].material;
-            renderer[0].material = SelectedMaterial;
-        }
-
         private int max_id = 0;
 
-        /// <summary>
-        /// Capture a tap gesture
-        /// </summary>
-        /// <param name="gesture">The gesture</param>
-        private void TapGestureCallback(GestureRecognizer gesture)
+        private GameObject RaycastOnDevice(float touchX, float touchY)
         {
-            if (gesture.State == GestureRecognizerState.Ended)
+            // Perform a raycast to see if there is a device that already exists
+            RaycastHit hit;
+            Ray ray = FirstPersonCamera.ScreenPointToRay(new Vector2(touchX, touchY));
+
+            /// Check if succeded and if the parent object (that is, the object that contains the mesh) has the asked tag
+            if (Physics.Raycast(ray, out hit) && hit.transform.parent.gameObject.tag == "Selectable")
             {
-                if (selected.focusedObject == null)
+                return hit.transform.parent.gameObject;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Perform a ARCore raycast to find planes.
+        /// <param name="touchX">The x-coordinate of the touch event based on the canvas reference frame.
+        /// <param name="touchY">The y-coordinate of the touch event, based on the canvas reference frame.
+        /// </summary>
+        private TrackableHit? RaycastOnPlane(float touchX, float touchY)
+        {
+            // Raycast against the location the player tapped to search for planes
+            TrackableHit hit;
+            TrackableHitFlags raycastFlags = TrackableHitFlags.PlaneWithinPolygon | TrackableHitFlags.FeaturePointWithSurfaceNormal;
+
+            if (deviceType != DeviceType.LINK && Frame.Raycast(touchX, touchY, raycastFlags, out hit))
+            {
+                if (hit.Trackable is DetectedPlane && Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
+                                hit.Pose.rotation * Vector3.up) >= 0)
                 {
-                    Debug.Log("No selected objects, trying to create a device");
-                    MainARController.Log($"Focus position: ${gesture.FocusX} {gesture.FocusY}");
-                    Touch touch = Input.GetTouch(0);
-                    // raycast against the location the player tapped to search for planes
-                    TrackableHit hit;
-                    TrackableHitFlags raycastFlags = TrackableHitFlags.PlaneWithinPolygon | TrackableHitFlags.FeaturePointWithSurfaceNormal;
 
-                    if (Frame.Raycast(gesture.FocusX, gesture.FocusY, raycastFlags, out hit))
+                    DetectedPlane plane = hit.Trackable as DetectedPlane;
+                    if (plane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
                     {
-                        Debug.Log("Raycasting found a plane at " + hit.Pose.position);
-                        // check if we are hitting a plane (again) and the
-                        // plane is not on the roof
-                        if (hit.Trackable is DetectedPlane && Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
-                                        hit.Pose.rotation * Vector3.up) >= 0)
-                        {
-
-                            DetectedPlane plane = hit.Trackable as DetectedPlane;
-                            if (plane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
-                            {
-                                Debug.Log("Hit a plane, trying to create a vertex");
-
-                                if (!flowGraph.globalAnchor)
-                                {
-                                    flowGraph.globalAnchor = hit.Trackable.CreateAnchor(hit.Pose);
-                                }
-                                var pawn = flowGraph.AddDevice(deviceType, max_id++, hit.Pose.position);
-                                SelectPawn(pawn);
-                            }
-                        }
+                        return hit;
                     }
-                    else
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Perform an action in ADD mode.
+        /// <param name="gesture">The gesture argument from FingersLite tap callback</param>
+        /// </summary>
+        private void AddDevices(GestureRecognizer gesture)
+        {
+            // Ignore gestures until they are done.
+            if (gesture.State != GestureRecognizerState.Ended)
+            {
+                return;
+            }
+
+            if (selected.focusedObject == null)
+            {
+                MainARController.Log($"Focus position: ${gesture.FocusX} {gesture.FocusY}");
+                Touch touch = Input.GetTouch(0);
+
+
+                GameObject selectable = RaycastOnDevice(gesture.FocusX, gesture.FocusY);
+                if (selectable)
+                {
+                    Debug.Log("There is already a device at this location, selecting it!");
+                    selected.Select(selectable);
+                    return;
+                }
+
+                /// Re-raycast to find a plane this time
+                var hit = RaycastOnPlane(gesture.FocusX, gesture.FocusY);
+                if (hit.HasValue)
+                {
+                    Debug.Log("Hit a plane, trying to create a vertex");
+
+                    if (!flowGraph.globalAnchor)
                     {
-                        MainARController.Log("No plane found! Tap on a mesh plane to create a device!");
+                        flowGraph.globalAnchor = hit.Value.Trackable.CreateAnchor(hit.Value.Pose);
+                    }
+
+                    GameObject pawn = null;
+                    pawn = flowGraph.AddDevice(deviceType, max_id++, hit.Value.Pose.position);
+                    if (pawn)
+                    {
+                        selected.Select(pawn);
                     }
                 }
                 else
                 {
-                    Debug.Log("Trying to deselect current gameobject");
-                    // check if I can raycast to the object
-                    RaycastHit hit;
-                    Ray ray = FirstPersonCamera.ScreenPointToRay(new Vector2(gesture.FocusX, gesture.FocusY));
+                    MainARController.Log("No plane found! Tap on a mesh plane to create a device!");
+                }
+            }
+            else
+            {
+                Debug.Log("Deselecting current gameobject");
+                selected.Unfocus();
+                var selectable = RaycastOnDevice(gesture.FocusX, gesture.FocusY);
 
-                    DeselectPawn();
-                    MainARController.Log(selected.focusedObject == null ? "Deselected!" : "Not yet deselected");
-                    if (Physics.Raycast(ray, out hit))
+                if (selectable)
+                {
+                    MainARController.Log("Reselected object position" + selectable.transform.position);
+                    selected.Select(selectable);
+
+                    if (deviceType == DeviceType.LINK && selected.previousFocusedObject)
                     {
-                        Transform objectHit = hit.transform;
+                        int? id1 = FlowGraph.GetDeviceId(selected.focusedObject);
+                        int? id2 = FlowGraph.GetDeviceId(selected.previousFocusedObject);
 
-                        // change target
-                        if (objectHit.gameObject.tag == "Selectable")
+                        if (id1.HasValue && id2.HasValue)
                         {
-                            MainARController.Log("Reselected object position: " + objectHit.gameObject.transform.position);
-                            SelectPawn(objectHit.gameObject);
+                            var link = flowGraph.AddLink(id1.Value, id2.Value);
+                            selected.UnfocusAndSelect(link);
                         }
                     }
                 }
+                else
+                {
+                    MainARController.Log("Nothing selected");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Delete a device.
+        /// <param name="gesture">The gesture</param>
+        /// </summary>
+        private void DeleteDevices(GestureRecognizer gesture)
+        {
+            GameObject pawn = RaycastOnDevice(gesture.FocusX, gesture.FocusY);
+            if (pawn)
+            {
+                flowGraph.DeleteObject(pawn);
+            }
+        }
+
+        /// <summary>
+        /// Capture a tap gesture
+        /// <param name="gesture">The gesture</param>
+        /// </summary>
+        private void TapGestureCallback(GestureRecognizer gesture)
+        {
+            if (this.mode == EditMode.ADD)
+            {
+                AddDevices(gesture);
+            }
+            else if (this.mode == EditMode.DELETE)
+            {
+                DeleteDevices(gesture);
             }
         }
 
@@ -178,12 +221,28 @@ namespace DataFlows
         /// <summary>
         /// Listen for a dropdown change.
         /// </summary>
-        public void OnDropdownChange()
+        public void OnDropdownChange(int value)
         {
             var options = DeviceDropdown.options;
-            var option = options[DeviceDropdown.value];
+            var option = options[value];
 
-            MainARController.Log($"Selected option {option.text}");
+            Debug.Log($"Selected option: {option.text}");
+            if (option.text == "Router")
+            {
+                deviceType = DeviceType.ROUTER;
+            }
+            else if (option.text == "Server")
+            {
+                deviceType = DeviceType.SERVER;
+            }
+            else if (option.text == "PC")
+            {
+                deviceType = DeviceType.PC;
+            }
+            else if (option.text == "Link")
+            {
+                deviceType = DeviceType.LINK;
+            }
         }
 
         /// <summary>
@@ -196,7 +255,6 @@ namespace DataFlows
 
             FingersScript.Instance.AddGesture(tapGesture);
         }
-
 
         private void SetAddDeleteButtonLabel(string label)
         {
@@ -215,6 +273,8 @@ namespace DataFlows
                 Debug.Log("ManipulationSystem needs a flow graph as a child");
                 Destroy(gameObject);
             }
+
+            DeviceDropdown.onValueChanged.AddListener(OnDropdownChange);
         }
 
         void OnApplicationFocus(bool hasFocus)
