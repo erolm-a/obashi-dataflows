@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5926822347843795302}
   - component: {fileID: 5926822347843795303}
   - component: {fileID: 5926822347843795320}
+  - component: {fileID: 9088245828321104137}
   m_Layer: 0
   m_Name: CordFlare
   m_TagString: Selectable
@@ -106,3 +107,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ScrollY: -0.8
+--- !u!114 &9088245828321104137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5926822347843795321}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: 0
+  eraseRenderer: 0
+  originalLayer: 0
+  originalMaterials: []

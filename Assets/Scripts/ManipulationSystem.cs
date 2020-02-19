@@ -17,14 +17,11 @@ namespace DataFlows
         /// Google ARCore Camera for raycasting
         /// </summary>
         public Camera FirstPersonCamera;
+
         /// <summary>
         /// Cord prefab that connects the vertices
         /// </summary>
         public GameObject Cord;
-        /// <summary>
-        /// Material for a selected pawn
-        /// </summary>
-        public Material SelectedMaterial;
 
         /// <summary>
         /// Flip add/delete button
@@ -40,11 +37,7 @@ namespace DataFlows
         private TapGestureRecognizer tapGesture;
         private PanGestureRecognizer panGesture;
 
-
         private SelectionState selected;
-
-
-        private Material oldUnselectedMaterial = null;
 
         private bool isPaused = false;
 
@@ -56,34 +49,6 @@ namespace DataFlows
         /// Access the FlowGraph prefab
         /// </summary>
         private FlowGraph flowGraph;
-
-
-        /// <summary>
-        /// Remove visual hint under a pawn, making it unselected.
-        /// As a side effect, selected is set to null and its second material is set to null.
-        /// </summary>
-        private void DeselectPawn()
-        {
-            if (selected.focusedObject == null)
-                return;
-
-            Renderer[] renderer = selected.focusedObject.GetComponentsInChildren<Renderer>();
-
-            renderer[0].material = oldUnselectedMaterial;
-            selected.Unfocus();
-        }
-
-        /// <summary>
-        /// Select the object and add a material to make the selection evident
-        /// </summary>
-        /// <param name="toSelect">The object to select</param>
-        private void SelectPawn(GameObject toSelect)
-        {
-            selected.Select(toSelect);
-            Renderer[] renderer = selected.focusedObject.GetComponentsInChildren<Renderer>();
-            oldUnselectedMaterial = renderer[0].material;
-            renderer[0].material = SelectedMaterial;
-        }
 
         private int max_id = 0;
 
@@ -150,7 +115,7 @@ namespace DataFlows
                 if (selectable)
                 {
                     Debug.Log("There is already a device at this location, selecting it!");
-                    SelectPawn(selectable);
+                    selected.Select(selectable);
                     return;
                 }
 
@@ -169,7 +134,7 @@ namespace DataFlows
                     pawn = flowGraph.AddDevice(deviceType, max_id++, hit.Value.Pose.position);
                     if (pawn)
                     {
-                        SelectPawn(pawn);
+                        selected.Select(pawn);
                     }
                 }
                 else
@@ -180,13 +145,13 @@ namespace DataFlows
             else
             {
                 Debug.Log("Deselecting current gameobject");
-                DeselectPawn();
+                selected.Unfocus();
                 var selectable = RaycastOnDevice(gesture.FocusX, gesture.FocusY);
 
                 if (selectable)
                 {
                     MainARController.Log("Reselected object position" + selectable.transform.position);
-                    SelectPawn(selectable);
+                    selected.Select(selectable);
 
                     if (deviceType == DeviceType.LINK && selected.previousFocusedObject)
                     {
@@ -196,8 +161,7 @@ namespace DataFlows
                         if (id1.HasValue && id2.HasValue)
                         {
                             var link = flowGraph.AddLink(id1.Value, id2.Value);
-                            DeselectPawn();
-                            SelectPawn(link);
+                            selected.UnfocusAndSelect(link);
                         }
                     }
                 }
@@ -291,7 +255,6 @@ namespace DataFlows
 
             FingersScript.Instance.AddGesture(tapGesture);
         }
-
 
         private void SetAddDeleteButtonLabel(string label)
         {

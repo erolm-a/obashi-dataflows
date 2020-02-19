@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using cakeslice;
 
 struct SelectionState
 {
@@ -16,10 +18,21 @@ struct SelectionState
 
     /// <summary>
     /// Select the current object. After this call focusedObject will point to pawn.
+    /// <param name="pawn">The object to select</param>
     /// </summary>
     public void Select(GameObject pawn)
     {
         focusedObject = pawn;
+
+        var list = pawn.GetComponentInChildren<Outline>();
+        Debug.Log($"Selecting {pawn}");
+        Debug.Log($"We have {list} here");
+        // Make an outline on it
+        foreach (var outline in pawn.GetComponentsInChildren<Outline>())
+        {
+            outline.enabled = true;
+        }
+
     }
 
     /// <summary>
@@ -29,6 +42,15 @@ struct SelectionState
     /// </summary>
     public void UnfocusAndSelect(GameObject pawn)
     {
+        // Deselect all the outlines.
+        if (focusedObject)
+        {
+            foreach (var outline in focusedObject.GetComponentsInChildren<Outline>())
+            {
+                outline.enabled = false;
+            }
+        }
+
         previousFocusedObject = focusedObject;
         focusedObject = pawn;
     }
@@ -38,6 +60,13 @@ struct SelectionState
     /// </summary>
     public void Unfocus()
     {
+        if (focusedObject)
+        {
+            foreach (var outline in focusedObject.GetComponentsInChildren<Outline>())
+            {
+                outline.enabled = false;
+            }
+        }
         previousFocusedObject = focusedObject;
         focusedObject = null;
     }

@@ -47,6 +47,22 @@ MonoBehaviour:
   osiType: 1
   deviceName: 
   deviceId: 0
+--- !u!114 &3935811738904519672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8487948240689576443}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: 0
+  eraseRenderer: 0
+  originalLayer: 0
+  originalMaterials: []
 --- !u!1001 &3361434540284062848
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -116,6 +132,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98c0e7851d82e0f54903af24d86b4543, type: 3}
+--- !u!1 &8487948240689576443 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6587931810131875195, guid: 98c0e7851d82e0f54903af24d86b4543,
+    type: 3}
+  m_PrefabInstance: {fileID: 3361434540284062848}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5156175343903256669 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7577408419354057949, guid: 98c0e7851d82e0f54903af24d86b4543,

@@ -194,4 +194,48 @@ namespace DataFlows
             id2GameObject = new Dictionary<int, GameObject>();
         }
     }
+
+    /*
+    [Serializable]
+    class SerializableFlowGraph
+    {
+        public int scene;
+
+        SerializableDevice[] devices;
+        SerializableCord[] cords;
+
+        private SerializableFlowGraph(int sceneId, FlowGraph flowGraph)
+        {
+            this.scene = sceneId;
+            // flowGraph.id2GameObject
+        }
+        public static string Serialize(int sceneId, FlowGraph flowGraph)
+        {
+            return JsonUtility.ToJson(new SerializableFlowGraph(sceneId, flowGraph));
+        }
+    }
+
+    [Serializable]
+    class SerializableDevice
+    {
+        public int scene_id;
+        public string name;
+        public string type;
+
+        SerializableDevice(int id, string name, DeviceType type)
+        {
+
+        }
+
+
+    }
+
+    [Serializable]
+    class SerializableCord
+    {
+        public int id1;
+        public int id2;
+    }
+
+    */
 }
