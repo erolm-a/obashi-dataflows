@@ -35,3 +35,10 @@ To be defined (see #11)
 7. On your phone, install "Google Play Services for AR".
 
 8. Install the generated apk at step 6 (either via adb or via issuing the 'build and run' command inside Unity).
+
+# Project structure
+
+The application is divided into a client, that is to say this Unity application, and a middleware.
+
+The middleware is a Django application available [here](https://stgit.dcs.gla.ac.uk/tp3-2019-cs25/game-middleware),
+and currently being hosted on [Heroku](http://glasgow-cs25-middleware.herokuapp.com/).
