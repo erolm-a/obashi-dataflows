@@ -16,11 +16,9 @@ namespace DataFlows
         public Anchor globalAnchor;
 
         public GameObject PCPawn;
-
         public GameObject RouterPawn;
         public GameObject SwitchPawn;
         public GameObject ServerPawn;
-
         public GameObject Link;
 
         /// <summary>
@@ -36,7 +34,7 @@ namespace DataFlows
         /// <summary>
         /// Maps pairs of device IDs to the cord that joins them.
         /// </summary>
-        private Dictionary<(int, int), GameObject> edgeList;
+        public Dictionary<(int, int), GameObject> edgeList;
 
         /// <summary>
         /// Add a device to the graph
@@ -187,6 +185,23 @@ namespace DataFlows
             return device.deviceId;
         }
 
+        /// <summary>
+        /// Make a FlowGraph instance from a JSON payload.
+        /// Please call this method only when an anchor point has been chosen.
+        /// </summary>
+        /// <param name="jsonPayload">The JSON string</param>
+        public void Deserialize(string jsonPayload)
+        {
+            SerializableFlowGraph deserialized = JsonUtility.FromJson<SerializableFlowGraph>(jsonPayload);
+
+            foreach (var device in deserialized.devices)
+            {
+                // AddDevice(Enum.Parse(typeof(DeviceType), device.type), device.scene_id);
+            }
+
+        }
+
+
         void Start()
         {
             edgeList = new Dictionary<(int, int), GameObject>();
@@ -195,24 +210,47 @@ namespace DataFlows
         }
     }
 
-    /*
     [Serializable]
     class SerializableFlowGraph
     {
-        public int scene;
+        public string name;
 
-        SerializableDevice[] devices;
-        SerializableCord[] cords;
+        public List<SerializableDevice> devices;
+        public List<SerializableCord> cords;
 
-        private SerializableFlowGraph(int sceneId, FlowGraph flowGraph)
+        private SerializableFlowGraph(FlowGraph flowGraph)
         {
-            this.scene = sceneId;
-            // flowGraph.id2GameObject
+            this.name = flowGraph.name;
+            this.devices = new List<SerializableDevice>();
+            this.cords = new List<SerializableCord>();
+
+            foreach (int sceneID in flowGraph.id2GameObject.Keys)
+            {
+                GameObject device = flowGraph.id2GameObject[sceneID];
+                Device deviceInfo = device.GetComponent<Device>();
+
+                devices.Add(new SerializableDevice(sceneID, deviceInfo.deviceName, deviceInfo.deviceType, device.transform));
+            }
+
+            foreach ((int, int) ids in flowGraph.edgeList.Keys)
+            {
+                if (ids.Item1 <= ids.Item2)
+                {
+                    cords.Add(new SerializableCord(ids.Item1, ids.Item2));
+                }
+            }
         }
-        public static string Serialize(int sceneId, FlowGraph flowGraph)
+
+        /// <summary>
+        /// Serialize a FlowGraph.
+        /// </summary>
+        /// <param name="flowGraph">The flow graph to serialize</param>
+        /// <returns>A JSON payload of the serialization</returns>
+        public static string Serialize(FlowGraph flowGraph)
         {
-            return JsonUtility.ToJson(new SerializableFlowGraph(sceneId, flowGraph));
+            return JsonUtility.ToJson(new SerializableFlowGraph(flowGraph));
         }
+
     }
 
     [Serializable]
@@ -222,12 +260,27 @@ namespace DataFlows
         public string name;
         public string type;
 
-        SerializableDevice(int id, string name, DeviceType type)
+        public float x;
+        public float y;
+        public float z;
+
+        /// <summary>
+        /// Create a serializable representation of a device. This is meant to be used by SerializableFlowGraph when serializing.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="position"></param>
+        public SerializableDevice(int id, string name, DeviceType type, Transform position)
         {
+            this.scene_id = id;
+            this.name = name;
+            this.type = type.ToString();
 
+            x = position.position.x;
+            y = position.position.y;
+            z = position.position.z;
         }
-
-
     }
 
     [Serializable]
@@ -235,7 +288,11 @@ namespace DataFlows
     {
         public int id1;
         public int id2;
-    }
 
-    */
+        public SerializableCord(int id1, int id2)
+        {
+            this.id1 = id1;
+            this.id2 = id2;
+        }
+    }
 }

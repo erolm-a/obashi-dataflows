@@ -1,7 +1,9 @@
 ﻿using DigitalRubyShared;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using GoogleARCore;
+using System.Collections;
 
 namespace DataFlows
 {
@@ -245,6 +247,34 @@ namespace DataFlows
             }
         }
 
+        public IEnumerator UploadScene()
+        {
+            MainARController.Log("Sending data");
+            string payload = SerializableFlowGraph.Serialize(flowGraph);
+            UnityWebRequest www = UnityWebRequest.Put("http://glasgow-cs25-middleware.herokuapp.com", payload);
+
+            yield return www.SendWebRequest();
+
+            if (www.isNetworkError || www.isHttpError)
+            {
+                MainARController.Log("Could not communicate with the server. Please see app logs for details.");
+                Debug.LogError(www.error);
+            }
+            else
+            {
+                MainARController.Log("Upload completed!");
+            }
+        }
+
+        /// <summary>
+        /// Listen for a press on the Save button
+        /// </summary>
+        public void OnSaveButtonPress()
+        {
+            StartCoroutine(UploadScene());
+
+        }
+
         /// <summary>
         /// Create a tap gesture
         /// </summary>
@@ -256,6 +286,10 @@ namespace DataFlows
             FingersScript.Instance.AddGesture(tapGesture);
         }
 
+        /// <summary>
+        /// Update the label for AddDeleteButton
+        /// </summary>
+        /// <param name="label">The new label</param>
         private void SetAddDeleteButtonLabel(string label)
         {
             Text textLabel = AddDeleteButton.GetComponentInChildren<Text>();
