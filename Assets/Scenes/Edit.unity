@@ -510,38 +510,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24d528ed2de6a9ac680c2ec436af9522, type: 3}
---- !u!84 &376017440
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_Width: 931
-  m_Height: 457
-  m_AntiAliasing: 1
-  m_DepthFormat: 1
-  m_ColorFormat: 7
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &452956184
 GameObject:
   m_ObjectHideFlags: 0
@@ -1375,6 +1343,38 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044769180}
   m_CullTransparentMesh: 0
+--- !u!84 &1154787844
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_Width: 1080
+  m_Height: 1920
+  m_AntiAliasing: 1
+  m_DepthFormat: 1
+  m_ColorFormat: 7
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
 --- !u!1 &1167826861
 GameObject:
   m_ObjectHideFlags: 0
@@ -1443,7 +1443,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: "\x02"
 --- !u!222 &1167826864
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1561,6 +1561,7 @@ MonoBehaviour:
   Cord: {fileID: 3618558107820252700, guid: 2f435f49910c95fe58a01c622ec6b787, type: 3}
   AddDeleteButton: {fileID: 590428803}
   DeviceDropdown: {fileID: 147765380}
+  ServerURL: https://glasgow-cs25-middleware.herokuapp.com
 --- !u!4 &1253198878
 Transform:
   m_ObjectHideFlags: 0
@@ -1833,7 +1834,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6820c5b73f6d3cdddb859e0d0aa67a06, type: 3}
---- !u!84 &1669887445
+--- !u!84 &1753413459
 RenderTexture:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1845,8 +1846,8 @@ RenderTexture:
     Hash: 00000000000000000000000000000000
   m_ForcedFallbackFormat: 4
   m_DownscaleFallback: 0
-  m_Width: 931
-  m_Height: 457
+  m_Width: 1080
+  m_Height: 1920
   m_AntiAliasing: 1
   m_DepthFormat: 1
   m_ColorFormat: 7
@@ -1899,8 +1900,8 @@ MonoBehaviour:
   sourceCamera: {fileID: 1956351168}
   outlineCamera: {fileID: 2105945489}
   outlineShaderMaterial: {fileID: 0}
-  renderTexture: {fileID: 376017440}
-  extraRenderTexture: {fileID: 1669887445}
+  renderTexture: {fileID: 1154787844}
+  extraRenderTexture: {fileID: 1753413459}
 --- !u!4 &1762362051 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4497055787654456, guid: c10877f7cd5764de18d46d7b777d1faa,
@@ -2394,7 +2395,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 0
   m_RenderingPath: 1
-  m_TargetTexture: {fileID: 376017440}
+  m_TargetTexture: {fileID: 1154787844}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0

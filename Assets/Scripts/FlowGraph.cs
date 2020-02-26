@@ -249,6 +249,33 @@ namespace DataFlows
             return JsonUtility.ToJson(new SerializableFlowGraph(flowGraph));
         }
 
+        /// <summary>
+        /// Deserialize into a FlowGraph
+        /// </summary>
+        /// <param name="payload">The JSON payload fetched from the server</param>
+        /// <param name="flowgraph">The flowgraph to create on. If its anchor
+        ///     point has not been set, the function will do nothing
+        /// </param>
+        public static void Deserialize(String payload, FlowGraph flowGraph)
+        {
+            if (!flowGraph.globalAnchor)
+            {
+                return;
+            }
+
+            SerializableFlowGraph deserialized = JsonUtility.FromJson<SerializableFlowGraph>(payload);
+
+            foreach (SerializableDevice device in deserialized.devices)
+            {
+                flowGraph.AddDevice((DeviceType)Enum.Parse(typeof(DeviceType), device.type), device.scene_id,
+                                    new Vector3(device.x, device.y, device.z));
+            }
+
+            foreach (SerializableCord cord in deserialized.cords)
+            {
+                flowGraph.AddLink(cord.id1, cord.id2);
+            }
+        }
     }
 
     [Serializable]
