@@ -8,7 +8,6 @@ namespace DataFlows
 {
     public class FlowGraph : MonoBehaviour
     {
-
         /// <summary>
         /// The anchor that roots the whole graph on
         /// </summary>
@@ -214,7 +213,6 @@ namespace DataFlows
     class SerializableFlowGraph
     {
         public string name;
-
         public List<SerializableDevice> devices;
         public List<SerializableCord> cords;
 

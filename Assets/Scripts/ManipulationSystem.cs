@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using GoogleARCore;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DataFlows
 {
@@ -36,6 +37,11 @@ namespace DataFlows
         public Dropdown DeviceDropdown;
 
 
+        /// <summary>
+        /// The URL of the middleware to connect to.
+        /// </summary>
+        public string ServerURL = "https://glasgow-cs25-middleware.herokuapp.com";
+
         private TapGestureRecognizer tapGesture;
         private PanGestureRecognizer panGesture;
 
@@ -53,6 +59,7 @@ namespace DataFlows
         private FlowGraph flowGraph;
 
         private int max_id = 0;
+
 
         private GameObject RaycastOnDevice(float touchX, float touchY)
         {
@@ -247,18 +254,41 @@ namespace DataFlows
             }
         }
 
+        /// <summary>
+        /// Factory method to create an HTTP request for JSON.
+        /// </summary>
+        /// <param name="content">The payload (as a string) to send</param>
+        /// <param name="method">A HTTP verb, such as GET, POST, PUT etc.</param>
+        /// <returns>A UnityWebRequest</returns>
+        private UnityWebRequest MakeRequest(string content, string method)
+        {
+            UnityWebRequest request = new UnityWebRequest(ServerURL + "/scenes/", method);
+            byte[] payload = System.Text.Encoding.UTF8.GetBytes(content);
+
+            request.SetRequestHeader("cache-control", "no-cache");
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.uploadHandler = (UploadHandler)new UploadHandlerRaw(payload);
+            request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+
+            return request;
+        }
+
+        /// <summary>
+        /// Upload the current scene if it does not exist, or replace it if it exists.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator UploadScene()
         {
             MainARController.Log("Sending data");
-            string payload = SerializableFlowGraph.Serialize(flowGraph);
-            UnityWebRequest www = UnityWebRequest.Put("http://glasgow-cs25-middleware.herokuapp.com", payload);
+            string serialized = SerializableFlowGraph.Serialize(flowGraph);
+            UnityWebRequest request = MakeRequest(serialized, "POST");
 
-            yield return www.SendWebRequest();
+            yield return request.SendWebRequest();
 
-            if (www.isNetworkError || www.isHttpError)
+            if (request.isNetworkError || request.isHttpError)
             {
                 MainARController.Log("Could not communicate with the server. Please see app logs for details.");
-                Debug.LogError(www.error);
+                Debug.LogError(request.error);
             }
             else
             {
@@ -272,7 +302,6 @@ namespace DataFlows
         public void OnSaveButtonPress()
         {
             StartCoroutine(UploadScene());
-
         }
 
         /// <summary>
@@ -299,7 +328,7 @@ namespace DataFlows
         {
             CreateTapGesture();
             SetAddDeleteButtonLabel("Add devices");
-            MainARController.Log("Started Edit mode!!");
+            MainARController.Log("Started Edit mode!");
 
             flowGraph = GetComponentInChildren<FlowGraph>();
             if (flowGraph == null)
@@ -307,6 +336,8 @@ namespace DataFlows
                 Debug.Log("ManipulationSystem needs a flow graph as a child");
                 Destroy(gameObject);
             }
+
+            flowGraph.name = "UnityTest";
 
             DeviceDropdown.onValueChanged.AddListener(OnDropdownChange);
         }
