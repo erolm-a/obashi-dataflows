@@ -12,15 +12,6 @@
 
 - Erce Ozturk [2329415o](mailto:2329415o@student.gla.ac.uk)
 
-## Project description
-
-The project is divided into 2 repositories:
-
-- this one, a Unity application
-- [the game middleware](https://stgit.dcs.gla.ac.uk/tp3-2019-cs25/game-middleware).
-
-Both of them comply with all requirements asked for the team project, and the motivation for such split have been discussed in the dissertation.
-
 # Setup
 
 0. Install the Android SDK. You don't need android studio, but if you wish you can install it as well.
@@ -40,3 +31,10 @@ Both of them comply with all requirements asked for the team project, and the mo
 7. On your phone, install "Google Play Services for AR".
 
 8. Install the generated apk at step 6 (either via adb or via issuing the 'build and run' command inside Unity).
+
+# Project structure
+
+The application is divided into a client, that is to say this Unity application, and a middleware.
+
+The middleware is a Django application available [here](https://stgit.dcs.gla.ac.uk/tp3-2019-cs25/game-middleware),
+and currently being hosted on [Heroku](http://glasgow-cs25-middleware.herokuapp.com/).
