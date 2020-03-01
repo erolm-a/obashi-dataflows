@@ -1,9 +1,16 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DataFlows.Commons
 {
+    public class SceneInfo
+    {
+        public int id;
+        public string name;
+    }
+
     /// <summary>
     /// A container for all the API calls to the middleware
     /// </summary>
@@ -30,6 +37,13 @@ namespace DataFlows.Commons
             return request;
         }
 
+        /// <summary>
+        /// Get a scene from the middleware
+        /// TODO: error handling
+        /// </summary>
+        /// <param name="sceneId">The id of the scene</param>
+        /// <param name="callback">A callback function to call once a the payload has been fetched.</param>
+        /// <returns>A coroutine</returns>
         public static IEnumerator GetScene(int sceneId, System.Action<string> callback)
         {
             UnityWebRequest request = UnityWebRequest.Get($"{ServerURL}/scenes/{sceneId}");
@@ -38,16 +52,31 @@ namespace DataFlows.Commons
 
             if (request.isNetworkError || request.isHttpError)
             {
-                Debug.Log(request.error);
+                Debug.LogError(request.error);
             }
             else
             {
-                // Show results as text
-                yield return null;
                 callback(request.downloadHandler.text);
+                yield return null; // FIXME: is this actually needed?
             }
-
         }
 
+        public static IEnumerator GetScenes(System.Action<List<SceneInfo>> scenes)
+        {
+            UnityWebRequest request = UnityWebRequest.Get($"{ServerURL}/scenes/");
+
+            yield return request.SendWebRequest();
+
+            if (request.isNetworkError || request.isHttpError)
+            {
+                Debug.LogError(request.error);
+            }
+            else
+            {
+                // TODO: Error handling
+                scenes(JsonUtility.FromJson<List<SceneInfo>>(request.downloadHandler.text));
+            }
+            yield return null;
+        }
     }
 }
