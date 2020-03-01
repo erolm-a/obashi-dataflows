@@ -3,7 +3,7 @@ using GoogleARCore;
 
 namespace DataFlows.Commons
 {
-    public class Raycastings
+    public static class Raycastings
     {
         /// <summary>
         /// Perform a classic Unity Raycast to find `GameObject`s tapped from the user.
