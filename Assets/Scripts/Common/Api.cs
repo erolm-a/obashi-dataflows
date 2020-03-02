@@ -1,14 +1,26 @@
 using UnityEngine;
 using UnityEngine.Networking;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace DataFlows.Commons
 {
+    [Serializable]
     public class SceneInfo
     {
         public int id;
         public string name;
+    }
+
+    /// <summary>
+    /// HACK: wrap a list of scenes in a single scene.
+    /// This is required as Unity's JsonUtility does not let us have root-level arrays.
+    /// </summary>
+    [Serializable]
+    class SceneRootWrapper
+    {
+        public SceneInfo[] scenes;
     }
 
     /// <summary>
@@ -61,7 +73,7 @@ namespace DataFlows.Commons
             }
         }
 
-        public static IEnumerator GetScenes(System.Action<List<SceneInfo>> scenes)
+        public static IEnumerator GetScenes(System.Action<SceneInfo[]> scenes)
         {
             UnityWebRequest request = UnityWebRequest.Get($"{ServerURL}/scenes/");
 
@@ -74,7 +86,7 @@ namespace DataFlows.Commons
             else
             {
                 // TODO: Error handling
-                scenes(JsonUtility.FromJson<List<SceneInfo>>(request.downloadHandler.text));
+                scenes(JsonUtility.FromJson<SceneRootWrapper>("{\"scenes\":" + request.downloadHandler.text + "}").scenes);
             }
             yield return null;
         }
