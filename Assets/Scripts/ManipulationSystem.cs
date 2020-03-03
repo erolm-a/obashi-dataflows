@@ -1,11 +1,9 @@
 ﻿using DigitalRubyShared;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
-using GoogleARCore;
-using System.Collections;
 using System.Collections.Generic;
 using DataFlows.Commons;
+using System.Linq;
 
 namespace DataFlows
 {
@@ -85,14 +83,22 @@ namespace DataFlows
                     if (!flowGraph.globalAnchor)
                     {
                         flowGraph.globalAnchor = hit.Value.Trackable.CreateAnchor(hit.Value.Pose);
+
+                        if (MainARController.instance.currentScene != null)
+                        {
+                            MainARController.instance.currentScene.UpdateFlowGraph(flowGraph);
+                        }
+                    }
+                    else
+                    {
+                        GameObject pawn = null;
+                        pawn = flowGraph.AddDevice(deviceType, max_id++, hit.Value.Pose.position);
+                        if (pawn)
+                        {
+                            selected.Select(pawn);
+                        }
                     }
 
-                    GameObject pawn = null;
-                    pawn = flowGraph.AddDevice(deviceType, max_id++, hit.Value.Pose.position);
-                    if (pawn)
-                    {
-                        selected.Select(pawn);
-                    }
                 }
                 else
                 {
@@ -207,7 +213,8 @@ namespace DataFlows
         /// </summary>
         public void OnSaveButtonPress()
         {
-            Api.SaveScene(flowGraph, OnUploadScene, MainARController.instance.currentScene == null);
+            Debug.Log("Trying to save the scene");
+            StartCoroutine(Api.SaveScene(flowGraph, OnUploadScene, MainARController.instance.currentScene == null));
         }
 
         private void OnUploadScene(SerializableFlowGraph serializableFlowGraph)
@@ -263,6 +270,10 @@ namespace DataFlows
         {
             flowGraph = GetComponentInChildren<FlowGraph>();
             var sceneInfo = MainARController.instance.currentScene;
+            if (sceneInfo != null && sceneInfo.devices.Count > 0)
+            {
+                max_id = sceneInfo.devices.Select(device => device.scene_device_id).Max() + 1;
+            }
         }
 
         void OnApplicationFocus(bool hasFocus)

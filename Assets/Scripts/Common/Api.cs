@@ -49,7 +49,7 @@ namespace DataFlows.Commons
         public static IEnumerator SaveScene(FlowGraph flowGraph, System.Action<SerializableFlowGraph> callback, bool newScene = true)
         {
             string serialized = SerializableFlowGraph.Serialize(flowGraph);
-            var restCall = "/scenes";
+            var restCall = "/scenes/";
 
             if (newScene)
             {
