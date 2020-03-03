@@ -120,6 +120,7 @@ namespace DataFlows
         /// </summary>
         void DeleteDevice(int id)
         {
+            id2GameObject.Remove(id);
             var adjacentVertices = adjacencyList[id];
             foreach (int adjacentId in adjacentVertices)
             {
@@ -239,6 +240,7 @@ namespace DataFlows
             foreach (int sceneID in flowGraph.id2GameObject.Keys)
             {
                 GameObject device = flowGraph.id2GameObject[sceneID];
+                Debug.Log($"Here device is {device}");
                 Device deviceInfo = device.GetComponent<Device>();
 
                 devices.Add(new SerializableDevice(sceneID, deviceInfo.deviceName, deviceInfo.deviceType, device.transform));
