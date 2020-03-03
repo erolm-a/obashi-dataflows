@@ -69,6 +69,7 @@ namespace DataFlows
                     newObject = Instantiate(ServerPawn, position, Quaternion.identity);
                     break;
                 default:
+                    Debug.Log("Could not understand which type was specified, defaulting to PC");
                     newObject = Instantiate(PCPawn, position, Quaternion.identity);
                     break;
             }
@@ -265,17 +266,16 @@ namespace DataFlows
                 return;
             }
 
-            Debug.Log(devices);
-
             foreach (SerializableDevice device in devices)
             {
-                flowGraph.AddDevice((DeviceType)Enum.Parse(typeof(DeviceType), device.type), device.scene_id,
+                Debug.Log(device.scene_device_id);
+                flowGraph.AddDevice((DeviceType)Enum.Parse(typeof(DeviceType), device.type), device.scene_device_id,
                     new Vector3(device.x, device.y, device.z));
             }
 
             foreach (SerializableCord cord in cords)
             {
-                flowGraph.AddLink(cord.id1, cord.id2);
+                flowGraph.AddLink(cord.device_1, cord.device_2);
             }
         }
 
@@ -308,6 +308,7 @@ namespace DataFlows
         public static SerializableFlowGraph[] DeserializeFromList(String payload)
         {
             String wrapper = "{\"content\": " + payload + "}";
+            Debug.Log($"Deserializing ${payload}");
             IdWrapper[] ids = JsonUtility.FromJson<ListWrapper<IdWrapper>>(wrapper).content;
             var scenes = JsonUtility.FromJson<ListWrapper<SerializableFlowGraph>>(wrapper).content;
             for (int i = 0; i < ids.Length; i++)
@@ -322,7 +323,7 @@ namespace DataFlows
     [Serializable]
     public class SerializableDevice
     {
-        public int scene_id;
+        public int scene_device_id;
         public string name;
         public string type;
 
@@ -339,7 +340,7 @@ namespace DataFlows
         /// <param name="position"></param>
         public SerializableDevice(int id, string name, DeviceType type, Transform position)
         {
-            this.scene_id = id;
+            this.scene_device_id = id;
             this.name = name;
             this.type = type.ToString();
 
@@ -352,13 +353,13 @@ namespace DataFlows
     [Serializable]
     public class SerializableCord
     {
-        public int id1;
-        public int id2;
+        public int device_1;
+        public int device_2;
 
         public SerializableCord(int id1, int id2)
         {
-            this.id1 = id1;
-            this.id2 = id2;
+            this.device_1 = id1;
+            this.device_2 = id2;
         }
     }
 }
