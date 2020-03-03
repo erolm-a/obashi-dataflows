@@ -1772,6 +1772,8 @@ MonoBehaviour:
   sceneBuildIndex: 1
   sceneInfo:
     name: 
+    devices: []
+    cords: []
 --- !u!114 &1079929048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3021,6 +3023,8 @@ MonoBehaviour:
   sceneBuildIndex: 2
   sceneInfo:
     name: 
+    devices: []
+    cords: []
 --- !u!1 &1767491871
 GameObject:
   m_ObjectHideFlags: 0
@@ -3344,6 +3348,8 @@ MonoBehaviour:
   sceneBuildIndex: 2
   sceneInfo:
     name: 
+    devices: []
+    cords: []
 --- !u!114 &2114404645
 MonoBehaviour:
   m_ObjectHideFlags: 0
