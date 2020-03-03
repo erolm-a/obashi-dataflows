@@ -8,7 +8,7 @@ namespace DataFlows
     public class ExplorationGraph : MonoBehaviour
     {
         /// <summary>
-        /// The URL of the middleware to connect to.
+        /// A reference to the first person camera, needed for object selection.
         /// </summary>
         public Camera FirstPersonCamera;
 
@@ -16,23 +16,6 @@ namespace DataFlows
         /// The child flow graph script.
         /// </summary>
         private FlowGraph flowGraph;
-
-        /// <summary>
-        /// The result from Api.GetScene. It is here to launch 
-        /// </summary>
-        private string deserialized;
-
-        /// <summary>
-        /// The id of the scene to load.
-        /// </summary>
-        [HideInInspector]
-        public int sceneId
-        {
-            set
-            {
-                StartCoroutine(Api.GetScene(value, LoadSceneCallback));
-            }
-        }
 
         private TapGestureRecognizer tapGesture;
 
@@ -60,14 +43,13 @@ namespace DataFlows
                 if (hit.HasValue)
                 {
                     flowGraph.globalAnchor = hit.Value.Trackable.CreateAnchor(hit.Value.Pose);
-                    SerializableFlowGraph.Deserialize(deserialized, flowGraph);
+                    MainARController.instance.currentScene.UpdateFlowGraph(flowGraph);
                 }
             }
-        }
-
-        private void LoadSceneCallback(string deserialized)
-        {
-            this.deserialized = deserialized;
+            else
+            {
+                // TODO: Query objects
+            }
         }
 
         void Start()
@@ -76,11 +58,7 @@ namespace DataFlows
             MainARController.Log("Started Edit mode!");
 
             flowGraph = GetComponentInChildren<FlowGraph>();
-            if (flowGraph == null)
-            {
-                Debug.Log("ManipulationSystem needs a flow graph as a child");
-                Destroy(gameObject);
-            }
+            MainARController.instance.currentScene.UpdateFlowGraph(flowGraph);
         }
     }
 

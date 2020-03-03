@@ -1,7 +1,6 @@
 ﻿using GoogleARCore;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
 
 namespace DataFlows
 {
@@ -10,8 +9,12 @@ namespace DataFlows
         private bool m_IsQuitting;
 
         // Just a singleton
-        private static MainARController instance;
+        [HideInInspector]
+        public static MainARController instance { get; private set; }
         private Toast toast;
+
+        [HideInInspector]
+        public SerializableFlowGraph currentScene;
 
         void Awake()
         {
@@ -56,7 +59,6 @@ namespace DataFlows
                 {
                     SceneManager.LoadScene("Menu", LoadSceneMode.Single);
                 }
-
             }
 
             // Only allow the screen to sleep when not tracking.
@@ -98,8 +100,8 @@ namespace DataFlows
             Application.Quit();
         }
 
-        /// <summary>project~
-        /// Log (temporary method) that is going to be removed soom
+        /// <summary>
+        /// Provide a toast message.
         /// </summary>
         /// <param name="message">The message to print</param>
         public static void Log(string message)
@@ -107,6 +109,5 @@ namespace DataFlows
             // ShowAndroidToastMessage(message);
             instance.toast.ShowToast(message, 3.0f);
         }
-
     }
 }

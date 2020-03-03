@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using DataFlows.Commons;
 
 namespace DataFlows
@@ -13,27 +10,23 @@ namespace DataFlows
         /// </summary>
         public GameObject Button;
 
-        void OnScenesFetched(SceneInfo[] scenes)
+        void OnScenesFetched(SerializableFlowGraph[] scenes)
         {
             Debug.Log(scenes);
-            foreach (SceneInfo scene in scenes)
+            foreach (SerializableFlowGraph scene in scenes)
             {
+                Debug.Log($"Found scene name: {scene.name}, id: {scene.id}");
                 var newButton = Instantiate(Button, Vector3.zero, Quaternion.identity);
                 newButton.transform.SetParent(transform);
+                var loadOnTouch = newButton.GetComponent<LoadOnTouch>();
+                loadOnTouch.sceneInfo = scene;
                 newButton.SetActive(true);
-                var textComponent = newButton.GetComponentInChildren<Text>();
-                textComponent.text = scene.name;
             }
         }
+
         void Start()
         {
             StartCoroutine(Api.GetScenes(OnScenesFetched));
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
         }
     }
 

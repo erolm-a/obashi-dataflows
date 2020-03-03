@@ -2,27 +2,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace DataFlows.Commons
 {
-    [Serializable]
-    public class SceneInfo
-    {
-        public int id;
-        public string name;
-    }
-
-    /// <summary>
-    /// HACK: wrap a list of scenes in a single scene.
-    /// This is required as Unity's JsonUtility does not let us have root-level arrays.
-    /// </summary>
-    [Serializable]
-    class SceneRootWrapper
-    {
-        public SceneInfo[] scenes;
-    }
-
     /// <summary>
     /// A container for all the API calls to the middleware
     /// </summary>
@@ -36,9 +18,9 @@ namespace DataFlows.Commons
         /// <param name="content">The payload (as a string) to send</param>
         /// <param name="method">A HTTP verb, such as GET, POST, PUT etc.</param>
         /// <returns>A UnityWebRequest</returns>
-        public static UnityWebRequest MakeRequest(string content, string method)
+        public static UnityWebRequest MakeRequest(string content, string restFunction, string method)
         {
-            UnityWebRequest request = new UnityWebRequest(ServerURL + "/scenes/", method);
+            UnityWebRequest request = new UnityWebRequest(ServerURL + restFunction, method);
             byte[] payload = System.Text.Encoding.UTF8.GetBytes(content);
 
             request.SetRequestHeader("cache-control", "no-cache");
@@ -49,17 +31,32 @@ namespace DataFlows.Commons
             return request;
         }
 
-        /// <summary>
-        /// Get a scene from the middleware
-        /// TODO: error handling
-        /// </summary>
-        /// <param name="sceneId">The id of the scene</param>
-        /// <param name="callback">A callback function to call once a the payload has been fetched.</param>
-        /// <returns>A coroutine</returns>
-        public static IEnumerator GetScene(int sceneId, System.Action<string> callback)
+        public static UnityWebRequest MakeRequest(string restFunction)
         {
-            UnityWebRequest request = UnityWebRequest.Get($"{ServerURL}/scenes/{sceneId}");
+            UnityWebRequest request = UnityWebRequest.Get(ServerURL + restFunction);
+            Debug.Log($"Making GET request to {request.url}");
 
+            return request;
+        }
+
+        /// <summary>
+        /// Save an existing scene or create a new one.
+        /// </summary>
+        /// <param name="flowGraph">The FlowGraph to serialize</param>
+        /// <param name="callback">The action to perform</param>
+        /// <param name="newScene">If true, save this as a new scene, otherwise replace an existing scene with the given id</param>
+        /// <returns>An IEnumerator to be used for a Unity Coroutine</returns>
+        public static IEnumerator SaveScene(FlowGraph flowGraph, System.Action<SerializableFlowGraph> callback, bool newScene = true)
+        {
+            string serialized = SerializableFlowGraph.Serialize(flowGraph);
+            var restCall = "/scenes";
+
+            if (newScene)
+            {
+                restCall += $"{flowGraph.id}/";
+            }
+
+            var request = MakeRequest(serialized, restCall, "POST");
             yield return request.SendWebRequest();
 
             if (request.isNetworkError || request.isHttpError)
@@ -68,14 +65,19 @@ namespace DataFlows.Commons
             }
             else
             {
-                callback(request.downloadHandler.text);
-                yield return null; // FIXME: is this actually needed?
+                callback(SerializableFlowGraph.Deserialize(request.downloadHandler.text));
             }
         }
 
-        public static IEnumerator GetScenes(System.Action<SceneInfo[]> scenes)
+        /// <summary>
+        /// Get a scene from the middleware
+        /// </summary>
+        /// <param name="sceneId">The id of the scene</param>
+        /// <param name="callback">A callback function to call once a the payload has been fetched.</param>
+        /// <returns>A coroutine</returns>
+        public static IEnumerator GetScene(int sceneId, System.Action<SerializableFlowGraph> callback)
         {
-            UnityWebRequest request = UnityWebRequest.Get($"{ServerURL}/scenes/");
+            UnityWebRequest request = MakeRequest($"/scenes/{sceneId}");
 
             yield return request.SendWebRequest();
 
@@ -86,7 +88,24 @@ namespace DataFlows.Commons
             else
             {
                 // TODO: Error handling
-                scenes(JsonUtility.FromJson<SceneRootWrapper>("{\"scenes\":" + request.downloadHandler.text + "}").scenes);
+                callback(SerializableFlowGraph.Deserialize(request.downloadHandler.text));
+            }
+        }
+
+        public static IEnumerator GetScenes(System.Action<SerializableFlowGraph[]> callback)
+        {
+            UnityWebRequest request = MakeRequest("/scenes/");
+
+            yield return request.SendWebRequest();
+
+            if (request.isNetworkError || request.isHttpError)
+            {
+                Debug.LogError(request.error);
+            }
+            else
+            {
+                // TODO: Error handling
+                callback(SerializableFlowGraph.DeserializeFromList(request.downloadHandler.text));
             }
             yield return null;
         }

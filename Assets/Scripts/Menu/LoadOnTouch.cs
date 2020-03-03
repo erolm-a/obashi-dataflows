@@ -1,34 +1,43 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class LoadOnTouch : MonoBehaviour
+namespace DataFlows
 {
-    /// <summary>
-    /// Scene to go to when touched
-    /// </summary>
-    public int sceneBuildIndex;
-
-    private IEnumerator LoadSceneAsync()
+    public class LoadOnTouch : MonoBehaviour
     {
-        Debug.Log("Debugging scene: " + sceneBuildIndex);
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Single);
+        /// <summary>
+        /// Scene to go to when touched
+        /// </summary>
+        public int sceneBuildIndex;
 
-        while (!asyncLoad.isDone)
-            yield return null;
-        
-        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(sceneBuildIndex));
-    }
+        [HideInInspector]
+        public SerializableFlowGraph sceneInfo;
 
-    public void Update() {
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        private IEnumerator LoadSceneAsync()
         {
-            if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId) && EventSystem.current.currentSelectedGameObject == gameObject)
-            {
-                StartCoroutine(LoadSceneAsync());
-            }
+            Debug.Log("Debugging scene: " + sceneBuildIndex);
+            MainARController.instance.currentScene = sceneInfo;
+
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Single);
+
+            while (!asyncLoad.isDone)
+                yield return null;
+
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(sceneBuildIndex));
+        }
+
+        void Start()
+        {
+            var text = GetComponentInChildren<Text>();
+            text.text = sceneInfo.name;
+        }
+
+        public void OnClick()
+        {
+            StartCoroutine(LoadSceneAsync());
         }
     }
+
 }

@@ -32,12 +32,6 @@ namespace DataFlows
         /// </summary>
         public Dropdown DeviceDropdown;
 
-
-        /// <summary>
-        /// The URL of the middleware to connect to.
-        /// </summary>
-        public string ServerURL = "https://glasgow-cs25-middleware.herokuapp.com";
-
         private TapGestureRecognizer tapGesture;
         private PanGestureRecognizer panGesture;
 
@@ -209,53 +203,21 @@ namespace DataFlows
         }
 
         /// <summary>
-        /// Factory method to create an HTTP request for JSON.
-        /// </summary>
-        /// <param name="content">The payload (as a string) to send</param>
-        /// <param name="method">A HTTP verb, such as GET, POST, PUT etc.</param>
-        /// <returns>A UnityWebRequest</returns>
-        private UnityWebRequest MakeRequest(string content, string method)
-        {
-            UnityWebRequest request = new UnityWebRequest(ServerURL + "/scenes/", method);
-            byte[] payload = System.Text.Encoding.UTF8.GetBytes(content);
-
-            request.SetRequestHeader("cache-control", "no-cache");
-            request.SetRequestHeader("Content-Type", "application/json");
-            request.uploadHandler = (UploadHandler)new UploadHandlerRaw(payload);
-            request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-
-            return request;
-        }
-
-        /// <summary>
-        /// Upload the current scene if it does not exist, or replace it if it exists.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator UploadScene()
-        {
-            MainARController.Log("Sending data");
-            string serialized = SerializableFlowGraph.Serialize(flowGraph);
-            UnityWebRequest request = MakeRequest(serialized, "POST");
-
-            yield return request.SendWebRequest();
-
-            if (request.isNetworkError || request.isHttpError)
-            {
-                MainARController.Log("Could not communicate with the server. Please see app logs for details.");
-                Debug.LogError(request.error);
-            }
-            else
-            {
-                MainARController.Log("Upload completed!");
-            }
-        }
-
-        /// <summary>
         /// Listen for a press on the Save button
         /// </summary>
         public void OnSaveButtonPress()
         {
-            StartCoroutine(UploadScene());
+            Api.SaveScene(flowGraph, OnUploadScene, MainARController.instance.currentScene == null);
+        }
+
+        private void OnUploadScene(SerializableFlowGraph serializableFlowGraph)
+        {
+            if (MainARController.instance.currentScene == null)
+            {
+                MainARController.instance.currentScene = serializableFlowGraph;
+            }
+
+            MainARController.Log($"Successfully saved scene {serializableFlowGraph.name}");
         }
 
         /// <summary>
@@ -278,6 +240,7 @@ namespace DataFlows
             Text textLabel = AddDeleteButton.GetComponentInChildren<Text>();
             textLabel.text = label;
         }
+
         void Start()
         {
             CreateTapGesture();
@@ -294,6 +257,12 @@ namespace DataFlows
             flowGraph.name = "UnityTest";
 
             DeviceDropdown.onValueChanged.AddListener(OnDropdownChange);
+        }
+
+        void Awake()
+        {
+            flowGraph = GetComponentInChildren<FlowGraph>();
+            var sceneInfo = MainARController.instance.currentScene;
         }
 
         void OnApplicationFocus(bool hasFocus)

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using GoogleARCore;
-
+using UnityEngine;
+using System.Linq;
 
 namespace DataFlows
 {
@@ -19,6 +19,12 @@ namespace DataFlows
         public GameObject SwitchPawn;
         public GameObject ServerPawn;
         public GameObject Link;
+
+        /// <summary>
+        /// The id of the scene.
+        /// </summary>
+        [HideInInspector]
+        public int id;
 
         /// <summary>
         /// Graph data represent vertices as integers for a more compact representation.
@@ -184,23 +190,6 @@ namespace DataFlows
             return device.deviceId;
         }
 
-        /// <summary>
-        /// Make a FlowGraph instance from a JSON payload.
-        /// Please call this method only when an anchor point has been chosen.
-        /// </summary>
-        /// <param name="jsonPayload">The JSON string</param>
-        public void Deserialize(string jsonPayload)
-        {
-            SerializableFlowGraph deserialized = JsonUtility.FromJson<SerializableFlowGraph>(jsonPayload);
-
-            foreach (var device in deserialized.devices)
-            {
-                // AddDevice(Enum.Parse(typeof(DeviceType), device.type), device.scene_id);
-            }
-
-        }
-
-
         void Start()
         {
             edgeList = new Dictionary<(int, int), GameObject>();
@@ -209,12 +198,36 @@ namespace DataFlows
         }
     }
 
+
     [Serializable]
-    class SerializableFlowGraph
+    public class SerializableFlowGraph
     {
         public string name;
         public List<SerializableDevice> devices;
         public List<SerializableCord> cords;
+
+        [NonSerialized]
+        public int id;
+
+
+        /// <summary>
+        /// A wrapper for an int.
+        /// </summary> 
+        [Serializable]
+        private class IdWrapper
+        {
+            public int id = -1;
+        }
+
+        /// <summary>
+        /// HACK: wrap a list of scenes in a single scene.
+        /// This is required as Unity's JsonUtility does not let us have root-level arrays.
+        /// </summary>
+        [Serializable]
+        class ListWrapper<T>
+        {
+            public T[] content = { };
+        }
 
         private SerializableFlowGraph(FlowGraph flowGraph)
         {
@@ -240,6 +253,33 @@ namespace DataFlows
         }
 
         /// <summary>
+        /// Update the flow gaph from a given deserialized representation
+        /// </summary>
+        /// <param name="flowGraph">The flow graph to update</param>
+        public void UpdateFlowGraph(FlowGraph flowGraph)
+        {
+            flowGraph.name = name;
+
+            if (!flowGraph.globalAnchor)
+            {
+                return;
+            }
+
+            Debug.Log(devices);
+
+            foreach (SerializableDevice device in devices)
+            {
+                flowGraph.AddDevice((DeviceType)Enum.Parse(typeof(DeviceType), device.type), device.scene_id,
+                    new Vector3(device.x, device.y, device.z));
+            }
+
+            foreach (SerializableCord cord in cords)
+            {
+                flowGraph.AddLink(cord.id1, cord.id2);
+            }
+        }
+
+        /// <summary>
         /// Serialize a FlowGraph.
         /// </summary>
         /// <param name="flowGraph">The flow graph to serialize</param>
@@ -250,36 +290,37 @@ namespace DataFlows
         }
 
         /// <summary>
-        /// Deserialize into a FlowGraph
+        /// Deserialize into a SerializableFlowGraph.
         /// </summary>
-        /// <param name="payload">The JSON payload fetched from the server</param>
-        /// <param name="flowgraph">The flowgraph to create on. If its anchor
-        ///     point has not been set, the function will do nothing
-        /// </param>
-        public static void Deserialize(String payload, FlowGraph flowGraph)
+        /// <param name="payload"></param>
+        /// <returns></returns>
+        public static SerializableFlowGraph Deserialize(String payload)
         {
-            if (!flowGraph.globalAnchor)
+            Debug.Log($"Deserializing {payload}");
+            var id = JsonUtility.FromJson<IdWrapper>(payload).id;
+            Debug.Log($"Got id {id}");
+
+            var deserialized = JsonUtility.FromJson<SerializableFlowGraph>(payload);
+            deserialized.id = id;
+            return deserialized;
+        }
+
+        public static SerializableFlowGraph[] DeserializeFromList(String payload)
+        {
+            String wrapper = "{\"content\": " + payload + "}";
+            IdWrapper[] ids = JsonUtility.FromJson<ListWrapper<IdWrapper>>(wrapper).content;
+            var scenes = JsonUtility.FromJson<ListWrapper<SerializableFlowGraph>>(wrapper).content;
+            for (int i = 0; i < ids.Length; i++)
             {
-                return;
+                scenes[i].id = ids[i].id;
             }
 
-            SerializableFlowGraph deserialized = JsonUtility.FromJson<SerializableFlowGraph>(payload);
-
-            foreach (SerializableDevice device in deserialized.devices)
-            {
-                flowGraph.AddDevice((DeviceType)Enum.Parse(typeof(DeviceType), device.type), device.scene_id,
-                                    new Vector3(device.x, device.y, device.z));
-            }
-
-            foreach (SerializableCord cord in deserialized.cords)
-            {
-                flowGraph.AddLink(cord.id1, cord.id2);
-            }
+            return scenes;
         }
     }
 
     [Serializable]
-    class SerializableDevice
+    public class SerializableDevice
     {
         public int scene_id;
         public string name;
@@ -309,7 +350,7 @@ namespace DataFlows
     }
 
     [Serializable]
-    class SerializableCord
+    public class SerializableCord
     {
         public int id1;
         public int id2;

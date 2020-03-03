@@ -22,6 +22,7 @@ namespace DataFlows
         public void OnTriggered()
         {
             // TODO: Possibly add an animations
+            MainARController.Log("Start!");
             DestinationMenu.SetActive(true);
             SourceMenu.SetActive(false);
         }
