@@ -68,6 +68,9 @@ namespace DataFlows
                 case DeviceType.SERVER:
                     newObject = Instantiate(ServerPawn, position, Quaternion.identity);
                     break;
+                case DeviceType.SWITCH:
+                    newObject = Instantiate(SwitchPawn, position, Quaternion.identity);
+                    break;
                 default:
                     Debug.Log("Could not understand which type was specified, defaulting to PC");
                     newObject = Instantiate(PCPawn, position, Quaternion.identity);
