@@ -202,6 +202,10 @@ namespace DataFlows
             {
                 deviceType = DeviceType.PC;
             }
+            else if (option.text == "Switch")
+            {
+                deviceType = DeviceType.SWITCH;
+            }
             else if (option.text == "Link")
             {
                 deviceType = DeviceType.LINK;
@@ -213,8 +217,7 @@ namespace DataFlows
         /// </summary>
         public void OnSaveButtonPress()
         {
-            Debug.Log("Trying to save the scene");
-            StartCoroutine(Api.SaveScene(flowGraph, OnUploadScene, MainARController.instance.currentScene == null));
+            Api.SaveScene(flowGraph, OnUploadScene, MainARController.instance.currentScene == null);
         }
 
         private void OnUploadScene(SerializableFlowGraph serializableFlowGraph)
