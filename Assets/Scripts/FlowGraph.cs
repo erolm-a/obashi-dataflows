@@ -94,7 +94,6 @@ namespace DataFlows
         /// <returns>The newly instantiated link, or the existing one if the link already existed.</returns>
         public GameObject AddLink(int id1, int id2)
         {
-
             int min_id = Math.Min(id1, id2);
             int max_id = Math.Max(id1, id2);
 
@@ -204,7 +203,7 @@ namespace DataFlows
     [Serializable]
     public class SerializableFlowGraph
     {
-        public string name;
+        public string name = "DummyScene";
         public List<SerializableDevice> devices;
         public List<SerializableCord> cords;
 

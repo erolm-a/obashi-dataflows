@@ -69,6 +69,7 @@ namespace DataFlows.Commons
             if (request.isNetworkError || request.isHttpError)
             {
                 Debug.LogError(request.error);
+                Debug.LogError(request.downloadHandler.text);
             }
             else
             {
@@ -91,6 +92,7 @@ namespace DataFlows.Commons
             if (request.isNetworkError || request.isHttpError)
             {
                 Debug.LogError(request.error);
+                Debug.LogError(request.downloadHandler.text);
             }
             else
             {
@@ -113,6 +115,7 @@ namespace DataFlows.Commons
             if (request.isNetworkError || request.isHttpError)
             {
                 Debug.LogError(request.error);
+                Debug.LogError(request.downloadHandler.text);
             }
             else
             {

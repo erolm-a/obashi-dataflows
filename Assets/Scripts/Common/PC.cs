@@ -6,6 +6,11 @@
     /// </summary>
     public class PC : Device
     {
+        private int counter = 0;
+        void Awake()
+        {
+            this.deviceName = "PC" + counter++;
+        }
 
         public override void OnUserSelect()
         {
