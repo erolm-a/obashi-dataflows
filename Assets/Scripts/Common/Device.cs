@@ -28,6 +28,7 @@ namespace DataFlows
         public string deviceName;
         [HideInInspector]
         public int deviceId;
+        public DeviceType deviceType;
 
         /// <summary>
         /// Action to perform when the object is selected
