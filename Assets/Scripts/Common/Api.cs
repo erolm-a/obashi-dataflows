@@ -14,11 +14,13 @@ namespace DataFlows.Commons
 
         /// <summary>
         /// Factory method to create an HTTP request for JSON.
+        /// It is recommended use the overloaded version `MakeRequest(string content)` for GET requests.
         /// </summary>
         /// <param name="content">The payload (as a string) to send</param>
+        /// <param name="restFunction">The rest function to call, e.g. "/scenes"</param>
         /// <param name="method">A HTTP verb, such as GET, POST, PUT etc.</param>
         /// <returns>A UnityWebRequest</returns>
-        public static UnityWebRequest MakeRequest(string content, string restFunction, string method)
+        private static UnityWebRequest MakeRequest(string content, string restFunction, string method)
         {
             UnityWebRequest request = new UnityWebRequest(ServerURL + restFunction, method);
             byte[] payload = System.Text.Encoding.UTF8.GetBytes(content);
@@ -31,7 +33,12 @@ namespace DataFlows.Commons
             return request;
         }
 
-        public static UnityWebRequest MakeRequest(string restFunction)
+        /// <summary>
+        /// Factory method to create an HTTP GET request.
+        /// </summary>
+        /// <param name="restFunction">The rest function to call, e.g. "/scenes"</param>
+        /// <returns>A UnityWebRequest</returns>
+        private static UnityWebRequest MakeRequest(string restFunction)
         {
             UnityWebRequest request = UnityWebRequest.Get(ServerURL + restFunction);
             Debug.Log($"Making GET request to {request.url}");
@@ -74,7 +81,7 @@ namespace DataFlows.Commons
         /// </summary>
         /// <param name="sceneId">The id of the scene</param>
         /// <param name="callback">A callback function to call once a the payload has been fetched.</param>
-        /// <returns>A coroutine</returns>
+        /// <returns>A coroutine handler</returns>
         public static IEnumerator GetScene(int sceneId, System.Action<SerializableFlowGraph> callback)
         {
             UnityWebRequest request = MakeRequest($"/scenes/{sceneId}");
@@ -92,6 +99,11 @@ namespace DataFlows.Commons
             }
         }
 
+        /// <summary>
+        /// Get a list of scenes
+        /// </summary>
+        /// <param name="callback">Function to call when the coroutine has completed</param>
+        /// <returns>A couroutine handler</returns>
         public static IEnumerator GetScenes(System.Action<SerializableFlowGraph[]> callback)
         {
             UnityWebRequest request = MakeRequest("/scenes/");
