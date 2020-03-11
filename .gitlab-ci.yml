@@ -1,6 +1,7 @@
 image: gableroux/unity3d:2018.4.12f1
 
 stages:
+  - lint
   - build_and_test
 
 variables:
@@ -46,3 +47,19 @@ build-android:
   image: gableroux/unity3d:2018.4.12f1-android
   variables:
     BUILD_TARGET: Android
+
+lint:
+  image: mono:latest
+  stage: lint
+  variables:
+      GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    - cd stylecopcli
+    - msbuild StyleCopCLI.sln
+    - cd bin/Debug 
+    - mono StyleCopCLI.exe -cs `find ../../../Assets/Scripts -name "*.cs"` -out ../../../stylecop-violations.xml || echo "Some violations were found, please inspect the artifacts!"
+
+  artifacts:
+    paths:
+    - stylecop-violations.xml
+

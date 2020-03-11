@@ -72,3 +72,6 @@ unity3d.alf
 
 # Ignore default keystore
 *.keystore
+
+# Ignore Stylecop cache files
+*.Cache
