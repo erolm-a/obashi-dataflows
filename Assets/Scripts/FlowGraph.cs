@@ -111,7 +111,7 @@ namespace DataFlows
             {
                 GameObject first = id2GameObject[min_id], second = id2GameObject[max_id];
 
-                newLink = Link.GetComponent<CordFlare>().create(first, second);
+                newLink = Link.GetComponentInChildren<CordFlare>().Create(first, second);
                 newLink.transform.parent = globalAnchor.transform;
 
                 adjacencyList[min_id].Add(max_id);
