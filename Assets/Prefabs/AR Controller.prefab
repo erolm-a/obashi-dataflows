@@ -44,6 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ab6e720067c25cbbf75ba0e800b617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentScene:
+    name: 
+    devices: []
+    cords: []
 --- !u!1001 &3465793943212825213
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -179,7 +183,7 @@ PrefabInstance:
     - target: {fileID: 7705608528338459820, guid: b1bd4ffcafa4ff4edb5344d5587c1000,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 95.5
       objectReference: {fileID: 0}
     - target: {fileID: 7705608528338459820, guid: b1bd4ffcafa4ff4edb5344d5587c1000,
         type: 3}
