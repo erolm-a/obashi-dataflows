@@ -74,4 +74,7 @@ unity3d.alf
 *.keystore
 
 # Ignore Stylecop cache files
-*.Cache
+*.Cache*
+
+# ... and the artifacts it generates
+stylecop-violations.xml

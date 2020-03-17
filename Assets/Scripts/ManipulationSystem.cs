@@ -1,7 +1,6 @@
 ﻿using DigitalRubyShared;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 using DataFlows.Commons;
 using System.Linq;
 
@@ -217,7 +216,22 @@ namespace DataFlows
         /// </summary>
         public void OnSaveButtonPress()
         {
-            Api.SaveScene(flowGraph, OnUploadScene, MainARController.instance.currentScene == null);
+            Debug.Log("Pressed save button");
+
+            if (flowGraph.sceneName == "")
+            {
+                NameFieldPopup.Instance.Setup("Scene name", "Please insert a scene name", (string name) => {
+                        Debug.Log("Provided name: " + name);
+                        flowGraph.sceneName = name;
+                        OnSaveButtonPress();
+                }, () => { Debug.Log("No name inserted"); });
+            }
+
+            if (flowGraph.sceneName != "")
+            {
+                Debug.Log($"Saving the scene {flowGraph.sceneName}");
+                StartCoroutine(Api.SaveScene(flowGraph, OnUploadScene, MainARController.instance.currentScene == null));
+            }
         }
 
         private void OnUploadScene(SerializableFlowGraph serializableFlowGraph)
@@ -263,8 +277,6 @@ namespace DataFlows
                 Debug.Log("ManipulationSystem needs a flow graph as a child");
                 Destroy(gameObject);
             }
-
-            flowGraph.name = "UnityTest";
 
             DeviceDropdown.onValueChanged.AddListener(OnDropdownChange);
         }

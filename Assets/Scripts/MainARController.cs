@@ -27,7 +27,6 @@ namespace DataFlows
             {
                 instance = this;
                 toast = GetComponentInChildren<Toast>();
-                Debug.Log(toast);
                 DontDestroyOnLoad(gameObject);
             }
         }

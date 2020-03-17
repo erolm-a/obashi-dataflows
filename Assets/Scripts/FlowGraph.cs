@@ -27,6 +27,12 @@ namespace DataFlows
         public int id;
 
         /// <summary>
+        /// The name of the scene
+        /// </summary>
+        [HideInInspector]
+        public string sceneName;
+
+        /// <summary>
         /// Graph data represent vertices as integers for a more compact representation.
         /// </summary>
         public Dictionary<int, GameObject> id2GameObject { get; private set; }
@@ -206,7 +212,7 @@ namespace DataFlows
     [Serializable]
     public class SerializableFlowGraph
     {
-        public string name = "DummyScene";
+        public string name = "";
         public List<SerializableDevice> devices;
         public List<SerializableCord> cords;
 
@@ -235,7 +241,7 @@ namespace DataFlows
 
         private SerializableFlowGraph(FlowGraph flowGraph)
         {
-            this.name = flowGraph.name;
+            this.name = flowGraph.sceneName;
             this.devices = new List<SerializableDevice>();
             this.cords = new List<SerializableCord>();
 
