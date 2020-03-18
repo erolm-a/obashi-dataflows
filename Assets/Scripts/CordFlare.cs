@@ -20,6 +20,8 @@ namespace DataFlows
         // The billboard of the cord
         private Billboard billboard;
 
+        private Material meshMaterial;
+
         /// <summary>
         /// Create a cord between two points and perform proper scaling.
         /// The cord will be oriented to look at the second object.
@@ -31,7 +33,7 @@ namespace DataFlows
         {
             GameObject result = Instantiate(this.gameObject, Vector3.Lerp(p1.transform.position, p2.transform.position, 0.5f), Quaternion.identity);
             CordFlare script = result.GetComponent<CordFlare>();
-            Billboard billboardScript = result.GetComponent<Billboard>();
+            Billboard billboardScript = script.billboard;
 
             script.endpoints.Item1 = p1;
             script.endpoints.Item2 = p2;
@@ -46,6 +48,13 @@ namespace DataFlows
             return result;
         }
 
+        void Awake()
+        {
+            meshMaterial = GetComponentInChildren<Renderer>().material;
+            billboard = GetComponentInChildren<Billboard>();
+            billboard.SetText("Hello world");
+        }
+
         /// <summary>
         /// "Animate" the flare. This basically consists of moving the flare by a variable offset for every frame depending on time
         /// the value of ScrollY dictates the speed of the flare.
@@ -53,12 +62,7 @@ namespace DataFlows
         private void m_scroll()
         {
             Vector2 scroll = new Vector2(0, Time.time * ScrollY);
-            GetComponent<Renderer>().material.mainTextureOffset = scroll;
-        }
-
-        void Start()
-        {
-            billboard = GetComponentInChildren<Billboard>();
+            meshMaterial.mainTextureOffset = scroll;
         }
 
         void Update()
