@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DataFlows.UI
 {
@@ -9,7 +7,7 @@ namespace DataFlows.UI
     /// </summary>
     public class Billboard : MonoBehaviour
     {
-        public TextMesh textMesh;
+        private TextMesh textMesh;
 
         void Awake()
         {
@@ -25,7 +23,7 @@ namespace DataFlows.UI
             // TODO: add scaling
         }
 
-        void Update()
+        void LateUpdate()
         {
             transform.rotation = Camera.main.transform.rotation;
         }

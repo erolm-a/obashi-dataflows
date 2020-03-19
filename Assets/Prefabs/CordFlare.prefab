@@ -100,7 +100,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5926822347843795300}
-  - component: {fileID: 7381867956855802116}
+  - component: {fileID: 7831992690367016805}
   m_Layer: 0
   m_Name: CordFlare
   m_TagString: Selectable
@@ -124,7 +124,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7381867956855802116
+--- !u!114 &7831992690367016805
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -149,7 +149,6 @@ GameObject:
   - component: {fileID: 4130744358662241761}
   - component: {fileID: 4489934778057743687}
   - component: {fileID: 4342748920708868567}
-  - component: {fileID: 1648824752879546704}
   - component: {fileID: 453775516527869063}
   m_Layer: 0
   m_Name: Mesh
@@ -231,19 +230,6 @@ CapsuleCollider:
   m_Height: 3
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1648824752879546704
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6625075382607505517}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7a832f1fceee2466b11c445ea987078, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ScrollY: -0.8
 --- !u!114 &453775516527869063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,8 +273,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8013115704403238487}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 1, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.2, z: 0.5}
   m_Children:
   - {fileID: 1477428409820659739}
   m_Father: {fileID: 5926822347843795300}
@@ -351,4 +337,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64be7a8894c49910fb0b9bf55a314a7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textMesh: {fileID: 0}
