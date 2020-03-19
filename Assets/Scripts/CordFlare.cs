@@ -1,54 +1,73 @@
 ﻿using UnityEngine;
-using GoogleARCore;
+using DataFlows.UI;
 
-public class CordFlare : MonoBehaviour
+namespace DataFlows
 {
-
-    /// <summary>
-    /// Scrolling of the texture
-    /// </summary>
-    public float ScrollY = -0.8f;
-
-    /// <summary>
-    /// Each cord could use a different cord material according to the transport protocol.
-    /// For example, we might expect that a cord between switches could be different from a cord between a router and a l
-    /// </summary>
-    public (GameObject, GameObject) endpoints;
-
-    /// <summary>
-    /// Create a cord between two points and perform proper scaling.
-    /// The cord will be oriented to look at the second object.
-    /// </summary>
-    /// <param name="p1">The first point</param>
-    /// <param name="p2">The second point</param>
-    /// <returns>The newly instantiated cord</returns>
-    public GameObject create(GameObject p1, GameObject p2)
+    public class CordFlare : MonoBehaviour
     {
-        GameObject result = Instantiate(this.gameObject, Vector3.Lerp(p1.transform.position, p2.transform.position, 0.5f), Quaternion.identity);
-        CordFlare script = result.GetComponent<CordFlare>();
-        script.endpoints.Item1 = p1;
-        script.endpoints.Item2 = p2;
 
-        result.transform.LookAt(p2.transform);
-        result.transform.Rotate(90f, 0, 0);
-        float distance = Vector3.Distance(p1.transform.position, p2.transform.position);
-        result.transform.localScale = new Vector3(0.05f, distance / 2, 0.05f);
+        /// <summary>
+        /// Scrolling speed
+        /// </summary>
+        public float ScrollY = -0.8f;
 
-        return result;
-    }
+        /// <summary>
+        /// Each cord could use a different cord material according to the transport protocol.
+        /// For example, we might expect that a cord between switches could be different from a cord between a router and a l
+        /// </summary>
+        [HideInInspector]
+        public (GameObject, GameObject) endpoints;
 
-    /// <summary>
-    /// "Animate" the flare. This basically consists of moving the flare by a variable offset for every frame depending on time
-    /// the value of ScrollY dictates the speed of the flare.
-    /// </summary>
-    private void m_scroll()
-    {
-        Vector2 scroll = new Vector2(0, Time.time * ScrollY);
-        GetComponent<Renderer>().material.mainTextureOffset = scroll;
-    }
+        // The billboard of the cord
+        private Billboard billboard;
 
-    void Update()
-    {
-        m_scroll();
+        private Material meshMaterial;
+
+        /// <summary>
+        /// Create a cord between two points and perform proper scaling.
+        /// The cord will be oriented to look at the second object.
+        /// </summary>
+        /// <param name="p1">The first point</param>
+        /// <param name="p2">The second point</param>
+        /// <returns>The newly instantiated cord</returns>
+        public GameObject Create(GameObject p1, GameObject p2)
+        {
+            GameObject result = Instantiate(this.gameObject, Vector3.Lerp(p1.transform.position, p2.transform.position, 0.5f), Quaternion.identity);
+            CordFlare script = result.GetComponent<CordFlare>();
+            // apply stretching to the cylinder only, i.e. to the gameobject that has a MeshFilter
+            MeshFilter cordMesh = result.GetComponentInChildren<MeshFilter>();
+            Billboard billboardScript = script.billboard;
+
+            script.endpoints.Item1 = p1;
+            script.endpoints.Item2 = p2;
+
+            // Stretch the cord, not the tooltip
+            GameObject toStretch = cordMesh.gameObject;
+            float distance = Vector3.Distance(p1.transform.position, p2.transform.position);
+
+            result.transform.LookAt(p2.transform);
+            result.transform.Rotate(90f, 0, 0);
+
+            toStretch.transform.localScale = new Vector3(0.05f, distance / 2, 0.05f);
+
+            billboardScript.SetText(distance.ToString("n2"));
+            return result;
+        }
+
+        void Awake()
+        {
+            meshMaterial = GetComponentInChildren<Renderer>().material;
+            billboard = GetComponentInChildren<Billboard>();
+        }
+
+        /// <summary>
+        /// </summary>
+        void Update()
+        {
+            /// "Animate" the flare. This basically consists of moving the flare
+            /// by a variable offset depending on time.
+            Vector2 scroll = new Vector2(0, Time.time * ScrollY);
+            meshMaterial.mainTextureOffset = scroll;
+        }
     }
 }
