@@ -382,6 +382,8 @@ MonoBehaviour:
       m_Image: {fileID: 21300000, guid: 8bfc093e046e26b35a932134b20aa219, type: 3}
     - m_Text: Server
       m_Image: {fileID: 21300000, guid: df8370ea877a6ae85998099da80fdf50, type: 3}
+    - m_Text: Switch
+      m_Image: {fileID: 21300000, guid: df8370ea877a6ae85998099da80fdf50, type: 3}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
