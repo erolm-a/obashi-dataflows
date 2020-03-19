@@ -30,7 +30,6 @@ namespace DataFlows
         public Dropdown DeviceDropdown;
 
         private TapGestureRecognizer tapGesture;
-        private PanGestureRecognizer panGesture;
 
         private SelectionState selected;
 
@@ -104,6 +103,7 @@ namespace DataFlows
                     MainARController.Log("No plane found! Tap on a mesh plane to create a device!");
                 }
             }
+
             else
             {
                 Debug.Log("Deselecting current gameobject");

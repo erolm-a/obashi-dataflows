@@ -14,6 +14,11 @@ namespace DataFlows
             this.deviceName = "Router" + counter++;
         }
 
+        void Start()
+        {
+            tooltipBillboard.GetComponent<DataFlows.UI.Billboard>()?.SetText(deviceName);
+        }
+
         public override void OnUserSelect()
         {
             MainARController.Log("Picked a Server!");
