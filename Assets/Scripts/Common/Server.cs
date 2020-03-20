@@ -9,9 +9,13 @@ namespace DataFlows
     {
 
         private int counter = 0;
-        void Awake()
+
+        new void Start()
         {
+            base.Start();
             this.deviceName = "Server" + counter++;
+            instantiatedTooltip.transform.localPosition += new Vector3(0.0f, 1.5f, 0.0f);
+            base.instantiatedTooltip.SetText(deviceName);
         }
 
         public override void OnUserSelect()

@@ -3,20 +3,23 @@
 namespace DataFlows
 {
     /// <summary>
-    /// Manage a PC entity.
-    /// A PC
+    /// Manage a Router
     /// </summary>
     public class Router : Device
     {
         private int counter = 0;
-        void Awake()
+
+        new void Start()
         {
+            Debug.Log("Reached start here!");
+            base.Start();
             this.deviceName = "Router" + counter++;
+            instantiatedTooltip.SetText(this.deviceName);
         }
 
         public override void OnUserSelect()
         {
-            MainARController.Log("Picked a Server!");
+            MainARController.Log("Picked a Router!");
         }
     }
 }
