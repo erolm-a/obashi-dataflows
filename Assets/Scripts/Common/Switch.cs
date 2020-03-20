@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace DataFlows
+﻿namespace DataFlows
 {
     /// <summary>
     /// Manage a Server entity.
@@ -9,9 +7,12 @@ namespace DataFlows
     {
 
         private int counter = 0;
-        void Awake()
+
+        new void Start()
         {
+            base.Start();
             this.deviceName = "Switch" + counter++;
+            instantiatedTooltip.SetText(this.deviceName);
         }
 
         public override void OnUserSelect()

@@ -77,6 +77,9 @@ MonoBehaviour:
   deviceName: 
   deviceId: 0
   deviceType: 2
+  tooltipBillboard: {fileID: 6774070932781886069, guid: 900fa201b5a81dd71bda8ecd993e8734,
+    type: 3}
+  infoCanvas: {fileID: 0}
 --- !u!1001 &3103203895067339385
 PrefabInstance:
   m_ObjectHideFlags: 0

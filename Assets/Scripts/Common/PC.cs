@@ -7,9 +7,12 @@
     public class PC : Device
     {
         private int counter = 0;
-        void Awake()
+
+        new void Start()
         {
+            base.Start();
             this.deviceName = "PC" + counter++;
+            instantiatedTooltip.SetText(deviceName);
         }
 
         public override void OnUserSelect()

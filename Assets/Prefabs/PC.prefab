@@ -97,6 +97,10 @@ MonoBehaviour:
   osiType: 3
   deviceName: 
   deviceId: 0
+  deviceType: 0
+  tooltipBillboard: {fileID: 6774070932781886069, guid: 900fa201b5a81dd71bda8ecd993e8734,
+    type: 3}
+  infoCanvas: {fileID: 0}
 --- !u!1001 &2815336021882730690
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -3,20 +3,18 @@
 namespace DataFlows
 {
     /// <summary>
-    /// Manage a PC entity.
-    /// A PC
+    /// Manage a Router
     /// </summary>
     public class Router : Device
     {
         private int counter = 0;
-        void Awake()
-        {
-            this.deviceName = "Router" + counter++;
-        }
 
-        void Start()
+        new void Start()
         {
-            tooltipBillboard.GetComponent<DataFlows.UI.Billboard>()?.SetText(deviceName);
+            Debug.Log("Reached start here!");
+            base.Start();
+            this.deviceName = "Router" + counter++;
+            instantiatedTooltip.SetText(this.deviceName);
         }
 
         public override void OnUserSelect()
