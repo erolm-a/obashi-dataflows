@@ -51,19 +51,6 @@ MonoBehaviour:
   tooltipBillboard: {fileID: 6774070932781886069, guid: 900fa201b5a81dd71bda8ecd993e8734,
     type: 3}
   infoCanvas: {fileID: 0}
---- !u!65 &7491281433665889555
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7790268765337075198}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.02, y: 0.02, z: 0.019999998}
-  m_Center: {x: 0, y: 0, z: 0.009999999}
 --- !u!114 &3682951092884442241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,6 +76,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3686022230479515147}
+  - component: {fileID: 8191774842381441780}
   m_Layer: 0
   m_Name: MeshGroup
   m_TagString: Untagged
@@ -111,6 +99,19 @@ Transform:
   m_Father: {fileID: 8889946172094926095}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8191774842381441780
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8943350625006643316}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.66, y: 1.3200009, z: 0.6600006}
+  m_Center: {x: 0, y: 0.6600004, z: -0.00000007867816}
 --- !u!1001 &7790268765337107294
 PrefabInstance:
   m_ObjectHideFlags: 0

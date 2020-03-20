@@ -1,18 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!65 &1800108116990700993
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3103203895067372761}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.020000001, y: 0.019999996, z: 0.019999996}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4146882653473062622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38,6 +25,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 956848707871372197}
+  - component: {fileID: 2446887977347896881}
   m_Layer: 0
   m_Name: MeshGroup
   m_TagString: Untagged
@@ -60,6 +48,19 @@ Transform:
   m_Father: {fileID: 2306958988296096673}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2446887977347896881
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7483822510051909061}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.42, y: 0.063, z: 0.18000004}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7947402206236536845
 GameObject:
   m_ObjectHideFlags: 0
