@@ -1,4 +1,6 @@
-﻿namespace DataFlows
+﻿using UnityEngine;
+
+namespace DataFlows
 {
     /// <summary>
     /// Manage a PC entity.
@@ -12,6 +14,7 @@
         {
             base.Start();
             this.deviceName = "PC" + counter++;
+            instantiatedTooltip.transform.localPosition += new Vector3(0.0f, 0.5f, 0.0f);
             instantiatedTooltip.SetText(deviceName);
         }
 

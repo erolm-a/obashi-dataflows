@@ -1,4 +1,6 @@
-﻿namespace DataFlows
+﻿using UnityEngine;
+
+namespace DataFlows
 {
     /// <summary>
     /// Manage a Server entity.
@@ -12,6 +14,7 @@
         {
             base.Start();
             this.deviceName = "Server" + counter++;
+            instantiatedTooltip.transform.localPosition += new Vector3(0.0f, 1.5f, 0.0f);
             base.instantiatedTooltip.SetText(deviceName);
         }
 
