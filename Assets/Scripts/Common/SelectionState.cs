@@ -27,17 +27,18 @@ namespace DataFlows
             focusedObject = pawn;
 
             var list = pawn.GetComponentInChildren<Outline>();
-            Debug.Log($"Selecting {pawn}");
-            Debug.Log($"We have {list} here");
 
             foreach (var outline in pawn.GetComponentsInChildren<Outline>())
             {
                 outline.enabled = true;
             }
 
+            Debug.Log($"pawn is {focusedObject} and previous pawn was {previousFocusedObject}");
+
             // When re-selecting the same object as before trigger an action
-            if (focusedObject == previousFocusedObject)
+            if (GameObject.ReferenceEquals(focusedObject, previousFocusedObject))
             {
+                Debug.Log("Reached here");
                 focusedObject.GetComponent<Device>()?.OnUserSelect();
             }
 

@@ -19,7 +19,7 @@ namespace DataFlows
 
         public override void OnUserSelect()
         {
-            MainARController.Log("Picked a Server!");
+            MainARController.Log("Picked a Router!");
         }
     }
 }
