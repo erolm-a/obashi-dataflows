@@ -111,7 +111,8 @@ MonoBehaviour:
   deviceType: 1
   tooltipBillboard: {fileID: 6774070932781886069, guid: 900fa201b5a81dd71bda8ecd993e8734,
     type: 3}
-  infoCanvas: {fileID: 0}
+  infoCanvas: {fileID: 5799274415723984746, guid: 91a5b80c0ef26b051bb809a4e81da3dd,
+    type: 3}
 --- !u!1001 &2011109831560487165
 PrefabInstance:
   m_ObjectHideFlags: 0
