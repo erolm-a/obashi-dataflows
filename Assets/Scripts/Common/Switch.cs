@@ -22,6 +22,8 @@ namespace DataFlows
         public override void OnUserSelect()
         {
             MainARController.Log("Picked a Switch!");
+            this.infoCanvas.SetActive(true);
+            this.infoCanvas.GetComponent<UI.DeviceInfoPanel>().PanelDevice = this;
         }
     }
 }

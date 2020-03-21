@@ -20,6 +20,8 @@ namespace DataFlows
         public override void OnUserSelect()
         {
             MainARController.Log("Picked a Router!");
+            this.infoCanvas.SetActive(true);
+            this.infoCanvas.GetComponent<UI.DeviceInfoPanel>().PanelDevice = this;
         }
     }
 }
